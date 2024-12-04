@@ -9,7 +9,6 @@ public class DataStore {
     private static DataStore instance;
     private static int nextId = 1;
 
-    // Changed from static final to just private
     private Map<Integer, User> users;
     private Map<Integer, Patient> patients;
     private Map<Integer, Appointment> appointments;
@@ -52,11 +51,17 @@ public class DataStore {
         addAppointment(appointment);
 
         // Add sample prescriptions
-        Prescription prescription = new Prescription(getNextId(), 2, 1, "Hypertension",
-                "Take as directed", "Monitor blood pressure");
-        prescription.addMedication(new Prescription.Medication("Lisinopril", "10mg", 30, "Take with water"));
-        prescription.addMedication(new Prescription.Medication("Aspirin", "81mg", 30, "Take with food"));
-        addPrescription(prescription);
+        Prescription prescription1 = new Prescription(getNextId(), 2, 1, "Hypertension",
+                "Take medications as directed", "Monitor blood pressure daily");
+        prescription1.addMedication(new Prescription.Medication("Lisinopril", "10mg", 30, "Take once daily with water"));
+        prescription1.addMedication(new Prescription.Medication("Aspirin", "81mg", 30, "Take once daily with food"));
+        addPrescription(prescription1);
+
+        Prescription prescription2 = new Prescription(getNextId(), 2, 1, "Seasonal Allergies",
+                "Take as needed", "Avoid known allergens");
+        prescription2.addMedication(new Prescription.Medication("Cetirizine", "10mg", 90, "Take once daily"));
+        prescription2.addMedication(new Prescription.Medication("Nasal Spray", "2 sprays per nostril", 30, "Use twice daily"));
+        addPrescription(prescription2);
 
         // Add sample medical records
         addMedicalRecord(new MedicalRecord(getNextId(), 2, 1, "Check-up", "Regular annual check-up"));
@@ -122,6 +127,10 @@ public class DataStore {
         patients.put(patient.getId(), patient);
     }
 
+    public List<Patient> getAllPatients() {
+        return new ArrayList<>(patients.values());
+    }
+
     // Appointment operations
     public void addAppointment(Appointment appointment) {
         appointments.put(appointment.getId(), appointment);
@@ -156,6 +165,12 @@ public class DataStore {
         return medicalRecords.get(id);
     }
 
+    public List<MedicalRecord> getMedicalRecords(int patientId) {
+        return medicalRecords.values().stream()
+                .filter(r -> r.getPatientId() == patientId)
+                .collect(Collectors.toList());
+    }
+
     public List<MedicalRecord> getMedicalRecordsByPatientId(int patientId) {
         return medicalRecords.values().stream()
                 .filter(record -> record.getPatientId() == patientId)
@@ -179,6 +194,12 @@ public class DataStore {
         dietPlans.remove(id);
     }
 
+    public List<DietPlan> getDietPlansForDietician(int dieticianId) {
+        return dietPlans.values().stream()
+                .filter(plan -> plan.getDieticianId() == dieticianId)
+                .collect(Collectors.toList());
+    }
+
     // Prescription operations
     public void addPrescription(Prescription prescription) {
         prescriptions.put(prescription.getId(), prescription);
@@ -196,28 +217,19 @@ public class DataStore {
         prescriptions.remove(id);
     }
 
+    public List<Prescription> getPrescriptionsByDoctorId(int doctorId) {
+        return prescriptions.values().stream()
+                .filter(prescription -> prescription.getDoctorId() == doctorId)
+                .collect(Collectors.toList());
+    }
+
     public List<Prescription> getPrescriptionsByPatientId(int patientId) {
         return prescriptions.values().stream()
                 .filter(prescription -> prescription.getPatientId() == patientId)
                 .collect(Collectors.toList());
     }
 
-    // Add missing methods for DoctorDashboard
-    public List<Patient> getAllPatients() {
-        return new ArrayList<>(patients.values());
-    }
-
-    public List<MedicalRecord> getMedicalRecords(int patientId) {
-        return medicalRecords.values().stream()
-                .filter(r -> r.getPatientId() == patientId)
-                .collect(Collectors.toList());
-    }
-
-    public Appointment getAppointmentById(int id) {
-        return appointments.get(id);
-    }
-
-    // Add missing methods for DieticianDashboard
+    // Dietician-specific operations
     public List<User> getPatientsForDietician(int dieticianId) {
         // For now, return all patients with PATIENT role
         // TODO: Implement proper patient-dietician relationship
@@ -229,11 +241,5 @@ public class DataStore {
     public List<DietConsultation> getDietConsultationsForDietician(int dieticianId) {
         // TODO: Implement this method when DietConsultation model is ready
         return new ArrayList<>();
-    }
-
-    public List<DietPlan> getDietPlansForDietician(int dieticianId) {
-        return dietPlans.values().stream()
-                .filter(plan -> plan.getDieticianId() == dieticianId)
-                .collect(Collectors.toList());
     }
 } 

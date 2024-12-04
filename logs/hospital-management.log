@@ -6374,3 +6374,36 @@ java.lang.NullPointerException: Cannot invoke "com.hospital.models.User.getName(
 2024-12-04 21:36:31.006 [main] INFO  com.hospital.data.DataManager - Adding dietician: Sarah Johnson
 2024-12-04 21:36:31.006 [main] INFO  com.hospital.data.DataManager - Adding hospital: City General Hospital
 2024-12-04 21:36:35.387 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: johndoe
+2024-12-04 21:43:21.704 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 21:43:21.712 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 21:43:21.716 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 21:43:21.716 [main] INFO  com.hospital.security.AuthService - User logged out
+2024-12-04 21:43:21.718 [main] INFO  com.hospital.security.AuthService - Attempting login for user: nonexistent
+2024-12-04 21:43:33.632 [main] INFO  com.hospital.data.DataManager - Adding doctor: Dr. John Smith
+2024-12-04 21:43:33.633 [main] INFO  com.hospital.data.DataManager - Adding patient: Jane Doe with ID: 2 to patients map
+2024-12-04 21:43:33.634 [main] INFO  com.hospital.data.DataManager - Adding patient: Jane Doe with ID: 2 to users map
+2024-12-04 21:43:33.634 [main] INFO  com.hospital.data.DataManager - Successfully added patient to both maps
+2024-12-04 21:43:33.634 [main] INFO  com.hospital.data.DataManager - Adding pharmacist: Bob Wilson
+2024-12-04 21:43:33.634 [main] INFO  com.hospital.data.DataManager - Adding IT support: Mike Brown
+2024-12-04 21:43:33.635 [main] INFO  com.hospital.data.DataManager - Adding dietician: Sarah Johnson
+2024-12-04 21:43:33.635 [main] INFO  com.hospital.data.DataManager - Adding hospital: City General Hospital
+2024-12-04 21:43:47.315 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: jhonedoe
+2024-12-04 21:44:04.253 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: jdoe
+2024-12-04 21:44:21.931 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: janesmith
+2024-12-04 21:44:25.886 [AWT-EventQueue-0] INFO  com.hospital.views.BaseDashboard - User janesmith logged out
+2024-12-04 21:46:50.072 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 21:46:50.089 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 21:46:50.091 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 21:46:50.092 [main] INFO  com.hospital.security.AuthService - User logged out
+2024-12-04 21:46:50.095 [main] INFO  com.hospital.security.AuthService - Attempting login for user: nonexistent
+2024-12-04 21:47:12.447 [main] INFO  com.hospital.data.DataManager - Adding doctor: Dr. John Smith
+2024-12-04 21:47:12.457 [main] INFO  com.hospital.data.DataManager - Adding patient: Jane Doe with ID: 2 to patients map
+2024-12-04 21:47:12.458 [main] INFO  com.hospital.data.DataManager - Adding patient: Jane Doe with ID: 2 to users map
+2024-12-04 21:47:12.458 [main] INFO  com.hospital.data.DataManager - Successfully added patient to both maps
+2024-12-04 21:47:12.458 [main] INFO  com.hospital.data.DataManager - Adding pharmacist: Bob Wilson
+2024-12-04 21:47:12.459 [main] INFO  com.hospital.data.DataManager - Adding IT support: Mike Brown
+2024-12-04 21:47:12.460 [main] INFO  com.hospital.data.DataManager - Adding dietician: Sarah Johnson
+2024-12-04 21:47:12.460 [main] INFO  com.hospital.data.DataManager - Adding hospital: City General Hospital
+2024-12-04 21:47:25.025 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: johnsmith
+2024-12-04 21:47:34.598 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: johndoe
+2024-12-04 21:48:46.165 [AWT-EventQueue-0] INFO  com.hospital.views.BaseDashboard - User johndoe logged out
