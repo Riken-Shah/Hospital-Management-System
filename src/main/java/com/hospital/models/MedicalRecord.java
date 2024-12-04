@@ -9,7 +9,6 @@ public class MedicalRecord {
     private String type;
     private String description;
     private LocalDateTime date;
-    private String attachments;
 
     public MedicalRecord(int id, int patientId, int doctorId, String type, String description) {
         this.id = id;
@@ -20,25 +19,16 @@ public class MedicalRecord {
         this.date = LocalDateTime.now();
     }
 
-    // Getters and setters
+    // Getters
     public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    
     public int getPatientId() { return patientId; }
-    public void setPatientId(int patientId) { this.patientId = patientId; }
-    
     public int getDoctorId() { return doctorId; }
-    public void setDoctorId(int doctorId) { this.doctorId = doctorId; }
-    
     public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
-    
     public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    
     public LocalDateTime getDate() { return date; }
+
+    // Setters
+    public void setType(String type) { this.type = type; }
+    public void setDescription(String description) { this.description = description; }
     public void setDate(LocalDateTime date) { this.date = date; }
-    
-    public String getAttachments() { return attachments; }
-    public void setAttachments(String attachments) { this.attachments = attachments; }
 } 

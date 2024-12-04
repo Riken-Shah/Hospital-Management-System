@@ -4,11 +4,13 @@ com/hospital/models/DietConsultation.class
 com/hospital/model/PharmacyInventory.class
 com/hospital/views/PatientDashboard$2.class
 com/hospital/models/Appointment.class
+com/hospital/models/Community.class
 com/hospital/views/PharmacistDashboard$4.class
 com/hospital/models/CommunityHealthMetric.class
 com/hospital/model/Prescription.class
 com/hospital/model/Dietician.class
 com/hospital/models/PharmacyInventory.class
+com/hospital/views/AdminDashboard$1.class
 com/hospital/views/CommunityManagerDashboard$2.class
 com/hospital/models/Pharmacist.class
 com/hospital/models/LabTest.class
@@ -43,6 +45,7 @@ com/hospital/models/Prescription$Medication.class
 com/hospital/views/DoctorDashboard$4.class
 com/hospital/views/PharmacistDashboard$2.class
 com/hospital/views/DieticianDashboard$ComboItem.class
+com/hospital/views/AdminDashboard$4.class
 com/hospital/models/MedicineOrder.class
 com/hospital/models/MedicationTransfer.class
 com/hospital/model/Hospital.class
@@ -55,6 +58,7 @@ com/hospital/views/DoctorDashboard$1.class
 com/hospital/views/AdminDashboard.class
 com/hospital/model/Doctor.class
 com/hospital/model/ITSupport.class
+com/hospital/views/AdminDashboard$3.class
 com/hospital/views/LabTechnicianDashboard.class
 com/hospital/model/DietConsultation.class
 com/hospital/models/LabInventory.class
@@ -73,6 +77,7 @@ com/hospital/views/DoctorDashboard.class
 com/hospital/views/ITSupportDashboard$1.class
 com/hospital/models/Medicine.class
 com/hospital/views/DoctorDashboard$2.class
+com/hospital/views/AdminDashboard$2.class
 com/hospital/models/ITSupportTicket.class
 com/hospital/views/PharmacistDashboard.class
 com/hospital/security/JwtService.class

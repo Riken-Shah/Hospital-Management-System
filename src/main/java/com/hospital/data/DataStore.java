@@ -20,6 +20,8 @@ public class DataStore {
     private Map<Integer, MedicineOrder> medicineOrders;
     private Map<Integer, Supplier> suppliers;
     private Map<Integer, ITSupportTicket> tickets;
+    private Map<Integer, Hospital> hospitals;
+    private Map<Integer, Community> communities;
     private List<CommunityManager> communityManagers;
     private List<CommunityHealthMetric> healthMetrics;
     private List<VaccinationDrive> vaccinationDrives;
@@ -43,6 +45,8 @@ public class DataStore {
         medicineOrders = new HashMap<>();
         suppliers = new HashMap<>();
         tickets = new HashMap<>();
+        hospitals = new HashMap<>();
+        communities = new HashMap<>();
         communityManagers = new ArrayList<>();
         healthMetrics = new ArrayList<>();
         vaccinationDrives = new ArrayList<>();
@@ -50,18 +54,42 @@ public class DataStore {
     }
 
     private void initializeDummyData() {
-        // Add dummy IT Support user
-        ITSupport itSupport = new ITSupport(
-            getNextId(), 
-            "Alex Tech", 
-            "alextech", 
-            1, 
-            "System Administration",
-            "123-456-7890"
-        );
-        users.put(itSupport.getId(), itSupport);
+        // Add dummy hospital
+        Hospital hospital = new Hospital(getNextId(), "City General Hospital", "123 Main St", "555-0000", "city.general@hospital.com");
+        hospitals.put(hospital.getId(), hospital);
 
-        // Add some dummy tickets
+        // Add dummy community
+        Community community = new Community(getNextId(), "Downtown Community", "Downtown Area", 50000, 1);
+        communities.put(community.getId(), community);
+
+        // Add dummy users
+        User admin = new User(getNextId(), "Admin User", "admin", "ADMIN", 1);
+        users.put(admin.getId(), admin);
+
+        User doctor = new User(getNextId(), "Dr. John Smith", "doctor1", "DOCTOR", 1);
+        users.put(doctor.getId(), doctor);
+
+        // Add dummy patient
+        Patient patient = new Patient(getNextId(), "Jane Doe", "patient1", 1);
+        patients.put(patient.getId(), patient);
+
+        // Add dummy appointments
+        Appointment appointment1 = new Appointment(1, 1, 2, LocalDateTime.now().plusDays(1), "Checkup", 
+            "SCHEDULED", "Regular checkup", "", 30, "Room 101");
+        appointments.put(appointment1.getId(), appointment1);
+
+        // Add dummy medical records
+        MedicalRecord record1 = new MedicalRecord(1, 1, 2, "Checkup", "Regular health checkup");
+        medicalRecords.put(record1.getId(), record1);
+
+        // Add dummy diet plan
+        List<String> restrictions = Arrays.asList("Nuts", "Dairy");
+        List<String> recommendations = Arrays.asList("More vegetables", "Less sugar");
+        DietPlan plan = new DietPlan(getNextId(), 2, 3, LocalDate.now(), LocalDate.now().plusMonths(1),
+                "Weight loss", restrictions, recommendations, "Initial plan", "ACTIVE");
+        addDietPlan(plan);
+
+        // Add dummy tickets
         addTicket(new ITSupportTicket(getNextId(), 2, "Hardware", "Laptop not turning on", "HIGH"));
         addTicket(new ITSupportTicket(getNextId(), 3, "Software", "Email client not working", "MEDIUM"));
         addTicket(new ITSupportTicket(getNextId(), 4, "Network", "Unable to connect to printer", "LOW"));
@@ -77,69 +105,51 @@ public class DataStore {
             new CommunityHealthMetric(2, "North Region", "Vaccination Rate", 75.0, "%", LocalDate.now(), "COVID-19 vaccination"),
             new CommunityHealthMetric(3, "North Region", "Blood Pressure Cases", 120, "cases", LocalDate.now(), "Hypertension tracking")
         ));
-
-        // Add dummy vaccination drives
-        vaccinationDrives.addAll(Arrays.asList(
-            new VaccinationDrive(1, "North Region", "COVID-19 Booster", LocalDate.now(), LocalDate.now().plusMonths(1), 
-                10000, 2500, "In Progress", "Targeting elderly population"),
-            new VaccinationDrive(2, "North Region", "Flu Vaccine", LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), 
-                5000, 3000, "In Progress", "Annual flu vaccination drive")
-        ));
-
-        // Add sample medicines and suppliers
-        Medicine med1 = new Medicine(getNextId(), "Paracetamol", 100, 5.99, LocalDate.now().plusYears(2), "Tablets", "Pain Relief");
-        Medicine med2 = new Medicine(getNextId(), "Amoxicillin", 50, 15.99, LocalDate.now().plusYears(1), "Capsules", "Antibiotics");
-        Medicine med3 = new Medicine(getNextId(), "Ibuprofen", 75, 7.99, LocalDate.now().plusYears(2), "Tablets", "Pain Relief");
-        addMedicine(med1);
-        addMedicine(med2);
-        addMedicine(med3);
-
-        Supplier sup1 = new Supplier(getNextId(), "PharmaCorp", "123-456-7890", "supplier@pharmacorp.com", "A");
-        Supplier sup2 = new Supplier(getNextId(), "MediSupply", "098-765-4321", "contact@medisupply.com", "A");
-        addSupplier(sup1);
-        addSupplier(sup2);
-
-        // Add sample orders
-        MedicineOrder order1 = new MedicineOrder(getNextId(), sup1.getId(), LocalDate.now().minusDays(5), "DELIVERED");
-        order1.addItem(med1.getId(), 50);
-        order1.addItem(med2.getId(), 25);
-        addMedicineOrder(order1);
-
-        MedicineOrder order2 = new MedicineOrder(getNextId(), sup2.getId(), LocalDate.now().minusDays(2), "PENDING");
-        order2.addItem(med3.getId(), 30);
-        addMedicineOrder(order2);
-
-        // Add sample users and patients
-        addUser(new User(getNextId(), "John Doe", "johndoe", "DOCTOR", 1));
-        addUser(new User(getNextId(), "Jane Smith", "janesmith", "PATIENT", 1));
-
-        Patient patient = new Patient(2, "Jane Smith", 35, "None", LocalDate.now(),
-                "123-456-7890", "jane@example.com", "123 Main St", "A+", "None",
-                LocalDate.of(1988, 1, 1), "Female", "987-654-3210");
-        addPatient(patient);
-
-        // Add sample appointments
-        Appointment appointment = new Appointment(getNextId(), 2, 1, LocalDateTime.now().plusDays(1),
-                "Regular Checkup", "SCHEDULED", "First visit", "Annual physical", 30, "Room 101");
-        addAppointment(appointment);
-
-        // Add sample prescriptions
-        Prescription prescription = new Prescription(getNextId(), 2, 1, "Hypertension",
-                "Take medications as directed", "Monitor blood pressure daily");
-        prescription.addMedication(new Prescription.Medication("Lisinopril", "10mg", 30, "Take once daily with water"));
-        addPrescription(prescription);
-
-        // Add sample medical records
-        addMedicalRecord(new MedicalRecord(getNextId(), 2, 1, "Check-up", "Regular annual check-up"));
-
-        // Add sample diet plans
-        List<String> restrictions = Arrays.asList("Dairy", "Gluten");
-        List<String> recommendations = Arrays.asList("Eat more vegetables", "Exercise daily");
-        DietPlan plan = new DietPlan(getNextId(), 2, 3, LocalDate.now(), LocalDate.now().plusMonths(1),
-                "Weight loss", restrictions, recommendations, "Initial plan", "ACTIVE");
-        addDietPlan(plan);
     }
 
+    // Hospital methods
+    public void addHospital(Hospital hospital) {
+        hospitals.put(hospital.getId(), hospital);
+    }
+
+    public Hospital getHospital(int id) {
+        return hospitals.get(id);
+    }
+
+    public List<Hospital> getAllHospitals() {
+        return new ArrayList<>(hospitals.values());
+    }
+
+    public void updateHospital(Hospital hospital) {
+        hospitals.put(hospital.getId(), hospital);
+    }
+
+    public void deleteHospital(int id) {
+        hospitals.remove(id);
+    }
+
+    // Community methods
+    public void addCommunity(Community community) {
+        communities.put(community.getId(), community);
+    }
+
+    public Community getCommunity(int id) {
+        return communities.get(id);
+    }
+
+    public List<Community> getAllCommunities() {
+        return new ArrayList<>(communities.values());
+    }
+
+    public void updateCommunity(Community community) {
+        communities.put(community.getId(), community);
+    }
+
+    public void deleteCommunity(int id) {
+        communities.remove(id);
+    }
+
+    // Existing methods...
     public int getNextId() {
         return nextId++;
     }
@@ -156,6 +166,8 @@ public class DataStore {
         medicineOrders.clear();
         suppliers.clear();
         tickets.clear();
+        hospitals.clear();
+        communities.clear();
         communityManagers.clear();
         healthMetrics.clear();
         vaccinationDrives.clear();
@@ -171,10 +183,6 @@ public class DataStore {
         return users.get(id);
     }
 
-    public List<User> getAllUsers() {
-        return new ArrayList<>(users.values());
-    }
-
     public User getUserByUsername(String username) {
         return users.values().stream()
                 .filter(user -> user.getUsername().equals(username))
@@ -182,14 +190,16 @@ public class DataStore {
                 .orElse(null);
     }
 
-    public User getUserById(int id) {
-        return users.get(id);
+    public List<User> getAllUsers() {
+        return new ArrayList<>(users.values());
     }
 
-    public List<User> getDoctors() {
-        return users.values().stream()
-                .filter(user -> "DOCTOR".equals(user.getRole()))
-                .collect(Collectors.toList());
+    public void updateUser(User user) {
+        users.put(user.getId(), user);
+    }
+
+    public void deleteUser(int id) {
+        users.remove(id);
     }
 
     // Patient methods
@@ -201,12 +211,16 @@ public class DataStore {
         return patients.get(id);
     }
 
+    public List<Patient> getAllPatients() {
+        return new ArrayList<>(patients.values());
+    }
+
     public void updatePatient(Patient patient) {
         patients.put(patient.getId(), patient);
     }
 
-    public List<Patient> getAllPatients() {
-        return new ArrayList<>(patients.values());
+    public void deletePatient(int id) {
+        patients.remove(id);
     }
 
     // Appointment methods
@@ -218,19 +232,15 @@ public class DataStore {
         return appointments.get(id);
     }
 
-    public void updateAppointment(Appointment appointment) {
-        appointments.put(appointment.getId(), appointment);
-    }
-
-    public List<Appointment> getAppointmentsByPatientId(int patientId) {
+    public List<Appointment> getAppointmentsForDoctor(int doctorId) {
         return appointments.values().stream()
-                .filter(appointment -> appointment.getPatientId() == patientId)
+                .filter(appointment -> appointment.getDoctorId() == doctorId)
                 .collect(Collectors.toList());
     }
 
-    public List<Appointment> getAppointmentsByDoctorId(int doctorId) {
+    public List<Appointment> getAppointmentsForPatient(int patientId) {
         return appointments.values().stream()
-                .filter(appointment -> appointment.getDoctorId() == doctorId)
+                .filter(appointment -> appointment.getPatientId() == patientId)
                 .collect(Collectors.toList());
     }
 
@@ -243,13 +253,7 @@ public class DataStore {
         return medicalRecords.get(id);
     }
 
-    public List<MedicalRecord> getMedicalRecords(int patientId) {
-        return medicalRecords.values().stream()
-                .filter(r -> r.getPatientId() == patientId)
-                .collect(Collectors.toList());
-    }
-
-    public List<MedicalRecord> getMedicalRecordsByPatientId(int patientId) {
+    public List<MedicalRecord> getMedicalRecordsForPatient(int patientId) {
         return medicalRecords.values().stream()
                 .filter(record -> record.getPatientId() == patientId)
                 .collect(Collectors.toList());
@@ -295,13 +299,7 @@ public class DataStore {
         prescriptions.remove(id);
     }
 
-    public List<Prescription> getPrescriptionsByDoctorId(int doctorId) {
-        return prescriptions.values().stream()
-                .filter(prescription -> prescription.getDoctorId() == doctorId)
-                .collect(Collectors.toList());
-    }
-
-    public List<Prescription> getPrescriptionsByPatientId(int patientId) {
+    public List<Prescription> getPrescriptionsForPatient(int patientId) {
         return prescriptions.values().stream()
                 .filter(prescription -> prescription.getPatientId() == patientId)
                 .collect(Collectors.toList());
@@ -309,35 +307,6 @@ public class DataStore {
 
     public List<Prescription> getAllPrescriptions() {
         return new ArrayList<>(prescriptions.values());
-    }
-
-    // Diet consultation methods
-    public List<DietConsultation> getDietConsultationsForDietician(int dieticianId) {
-        return dietConsultations.values().stream()
-                .filter(consultation -> consultation.getDieticianId() == dieticianId)
-                .collect(Collectors.toList());
-    }
-
-    public void addDietConsultation(DietConsultation consultation) {
-        dietConsultations.put(consultation.getId(), consultation);
-    }
-
-    public DietConsultation getDietConsultation(int id) {
-        return dietConsultations.get(id);
-    }
-
-    public void updateDietConsultation(DietConsultation consultation) {
-        dietConsultations.put(consultation.getId(), consultation);
-    }
-
-    public void deleteDietConsultation(int id) {
-        dietConsultations.remove(id);
-    }
-
-    public List<DietConsultation> getDietConsultationsForPatient(int patientId) {
-        return dietConsultations.values().stream()
-                .filter(consultation -> consultation.getPatientId() == patientId)
-                .collect(Collectors.toList());
     }
 
     // Medicine methods
@@ -361,6 +330,19 @@ public class DataStore {
         medicines.remove(id);
     }
 
+    // Medicine order methods
+    public void addMedicineOrder(MedicineOrder order) {
+        medicineOrders.put(order.getId(), order);
+    }
+
+    public MedicineOrder getMedicineOrder(int id) {
+        return medicineOrders.get(id);
+    }
+
+    public List<MedicineOrder> getAllMedicineOrders() {
+        return new ArrayList<>(medicineOrders.values());
+    }
+
     // Supplier methods
     public void addSupplier(Supplier supplier) {
         suppliers.put(supplier.getId(), supplier);
@@ -382,28 +364,7 @@ public class DataStore {
         suppliers.remove(id);
     }
 
-    // Medicine Order methods
-    public void addMedicineOrder(MedicineOrder order) {
-        medicineOrders.put(order.getId(), order);
-    }
-
-    public MedicineOrder getMedicineOrder(int id) {
-        return medicineOrders.get(id);
-    }
-
-    public List<MedicineOrder> getAllMedicineOrders() {
-        return new ArrayList<>(medicineOrders.values());
-    }
-
-    public void updateMedicineOrder(MedicineOrder order) {
-        medicineOrders.put(order.getId(), order);
-    }
-
-    public void deleteMedicineOrder(int id) {
-        medicineOrders.remove(id);
-    }
-
-    // IT Support Ticket methods
+    // IT Support ticket methods
     public void addTicket(ITSupportTicket ticket) {
         tickets.put(ticket.getId(), ticket);
     }
@@ -416,6 +377,12 @@ public class DataStore {
         return new ArrayList<>(tickets.values());
     }
 
+    public List<ITSupportTicket> getTicketsForUser(int userId) {
+        return tickets.values().stream()
+                .filter(ticket -> ticket.getUserId() == userId)
+                .collect(Collectors.toList());
+    }
+
     public void updateTicket(ITSupportTicket ticket) {
         tickets.put(ticket.getId(), ticket);
     }
@@ -424,16 +391,36 @@ public class DataStore {
         tickets.remove(id);
     }
 
-    // Community Manager methods
-    public List<CommunityManager> getCommunityManagers() {
+    // Community manager methods
+    public void addCommunityManager(CommunityManager manager) {
+        communityManagers.add(manager);
+        users.put(manager.getId(), manager);
+    }
+
+    public List<CommunityManager> getAllCommunityManagers() {
         return new ArrayList<>(communityManagers);
     }
 
-    public CommunityManager getCommunityManager(String username) {
+    public CommunityManager getCommunityManagerByRegion(String region) {
         return communityManagers.stream()
-                .filter(cm -> cm.getUsername().equals(username))
+                .filter(manager -> manager.getRegion().equals(region))
                 .findFirst()
                 .orElse(null);
+    }
+
+    // Health metrics methods
+    public void addHealthMetric(CommunityHealthMetric metric) {
+        healthMetrics.add(metric);
+    }
+
+    public List<CommunityHealthMetric> getAllHealthMetrics() {
+        return new ArrayList<>(healthMetrics);
+    }
+
+    public List<CommunityHealthMetric> getHealthMetricsForRegion(String region) {
+        return healthMetrics.stream()
+                .filter(metric -> metric.getRegion().equals(region))
+                .collect(Collectors.toList());
     }
 
     public List<CommunityHealthMetric> getHealthMetrics(String region) {
@@ -442,20 +429,19 @@ public class DataStore {
                 .collect(Collectors.toList());
     }
 
-    public List<VaccinationDrive> getVaccinationDrives(String region) {
+    // Vaccination drive methods
+    public void addVaccinationDrive(VaccinationDrive drive) {
+        vaccinationDrives.add(drive);
+    }
+
+    public List<VaccinationDrive> getAllVaccinationDrives() {
+        return new ArrayList<>(vaccinationDrives);
+    }
+
+    public List<VaccinationDrive> getVaccinationDrivesForRegion(String region) {
         return vaccinationDrives.stream()
                 .filter(drive -> drive.getRegion().equals(region))
                 .collect(Collectors.toList());
-    }
-
-    public void addHealthMetric(CommunityHealthMetric metric) {
-        metric.setId(healthMetrics.size() + 1);
-        healthMetrics.add(metric);
-    }
-
-    public void addVaccinationDrive(VaccinationDrive drive) {
-        drive.setId(vaccinationDrives.size() + 1);
-        vaccinationDrives.add(drive);
     }
 
     public void updateVaccinationDrive(VaccinationDrive drive) {
@@ -468,11 +454,69 @@ public class DataStore {
         }
     }
 
-    // Dietician-specific methods
-    public List<User> getPatientsForDietician(int dieticianId) {
-        // For now, return all patients
-        return users.values().stream()
-                .filter(u -> "PATIENT".equals(u.getRole()))
+    public List<VaccinationDrive> getVaccinationDrives(String region) {
+        return vaccinationDrives.stream()
+                .filter(drive -> drive.getRegion().equals(region))
                 .collect(Collectors.toList());
+    }
+
+    public List<User> getPatientsForDietician(int dieticianId) {
+        return users.values().stream()
+                .filter(user -> "PATIENT".equals(user.getRole()))
+                .collect(Collectors.toList());
+    }
+
+    public List<DietConsultation> getDietConsultationsForDietician(int dieticianId) {
+        return dietConsultations.values().stream()
+                .filter(consultation -> consultation.getDieticianId() == dieticianId)
+                .collect(Collectors.toList());
+    }
+
+    public List<Appointment> getAppointmentsByPatientId(int patientId) {
+        return appointments.values().stream()
+                .filter(appointment -> appointment.getPatientId() == patientId)
+                .collect(Collectors.toList());
+    }
+
+    public User getUserById(int id) {
+        return users.get(id);
+    }
+
+    public List<Prescription> getPrescriptionsByPatientId(int patientId) {
+        return prescriptions.values().stream()
+                .filter(prescription -> prescription.getPatientId() == patientId)
+                .collect(Collectors.toList());
+    }
+
+    public List<MedicalRecord> getMedicalRecordsByPatientId(int patientId) {
+        return medicalRecords.values().stream()
+                .filter(record -> record.getPatientId() == patientId)
+                .collect(Collectors.toList());
+    }
+
+    public List<User> getDoctors() {
+        return users.values().stream()
+                .filter(user -> "DOCTOR".equals(user.getRole()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Appointment> getAppointmentsByDoctorId(int doctorId) {
+        return appointments.values().stream()
+                .filter(appointment -> appointment.getDoctorId() == doctorId)
+                .collect(Collectors.toList());
+    }
+
+    public List<MedicalRecord> getMedicalRecords(int patientId) {
+        return getMedicalRecordsByPatientId(patientId);
+    }
+
+    public List<Prescription> getPrescriptionsByDoctorId(int doctorId) {
+        return prescriptions.values().stream()
+                .filter(prescription -> prescription.getDoctorId() == doctorId)
+                .collect(Collectors.toList());
+    }
+
+    public void updateAppointment(Appointment appointment) {
+        appointments.put(appointment.getId(), appointment);
     }
 } 

@@ -6597,3 +6597,87 @@ java.lang.ClassCastException: class com.hospital.models.User cannot be cast to c
 2024-12-04 23:00:34.638 [main] INFO  com.hospital.data.DataManager - Adding dietician: Sarah Johnson
 2024-12-04 23:00:34.638 [main] INFO  com.hospital.data.DataManager - Adding hospital: City General Hospital
 2024-12-04 23:00:50.161 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: community1
+2024-12-04 23:15:54.805 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 23:15:54.818 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 23:15:54.820 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 23:15:54.820 [main] INFO  com.hospital.security.AuthService - User logged out
+2024-12-04 23:15:54.822 [main] INFO  com.hospital.security.AuthService - Attempting login for user: nonexistent
+2024-12-04 23:15:59.149 [AWT-EventQueue-0] ERROR com.hospital.views.LoginFrame - Error opening dashboard: 
+java.lang.ClassCastException: class com.hospital.models.User cannot be cast to class com.hospital.models.CommunityManager (com.hospital.models.User and com.hospital.models.CommunityManager are in unnamed module of loader 'app')
+	at com.hospital.views.CommunityManagerDashboard.<init>(CommunityManagerDashboard.java:30)
+	at com.hospital.views.LoginFrame.lambda$openDashboard$1(LoginFrame.java:120)
+	at java.desktop/java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:318)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:773)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:714)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:742)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+2024-12-04 23:16:24.311 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 23:16:24.322 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 23:16:24.323 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 23:16:24.323 [main] INFO  com.hospital.security.AuthService - User logged out
+2024-12-04 23:16:24.328 [main] INFO  com.hospital.security.AuthService - Attempting login for user: nonexistent
+2024-12-04 23:16:28.555 [AWT-EventQueue-0] ERROR com.hospital.views.LoginFrame - Error opening dashboard: 
+java.lang.ClassCastException: class com.hospital.models.User cannot be cast to class com.hospital.models.CommunityManager (com.hospital.models.User and com.hospital.models.CommunityManager are in unnamed module of loader 'app')
+	at com.hospital.views.CommunityManagerDashboard.<init>(CommunityManagerDashboard.java:30)
+	at com.hospital.views.LoginFrame.lambda$openDashboard$1(LoginFrame.java:120)
+	at java.desktop/java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:318)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:773)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:714)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:742)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+2024-12-04 23:16:35.840 [main] INFO  com.hospital.data.DataManager - Adding doctor: Dr. John Smith
+2024-12-04 23:16:35.842 [main] INFO  com.hospital.data.DataManager - Adding patient: Jane Doe with ID: 2 to patients map
+2024-12-04 23:16:35.842 [main] INFO  com.hospital.data.DataManager - Adding patient: Jane Doe with ID: 2 to users map
+2024-12-04 23:16:35.842 [main] INFO  com.hospital.data.DataManager - Successfully added patient to both maps
+2024-12-04 23:16:35.842 [main] INFO  com.hospital.data.DataManager - Adding pharmacist: Bob Wilson
+2024-12-04 23:16:35.842 [main] INFO  com.hospital.data.DataManager - Adding IT support: Mike Brown
+2024-12-04 23:16:35.842 [main] INFO  com.hospital.data.DataManager - Adding dietician: Sarah Johnson
+2024-12-04 23:16:35.842 [main] INFO  com.hospital.data.DataManager - Adding hospital: City General Hospital
+2024-12-04 23:16:55.182 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: admin
+2024-12-04 23:19:09.435 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 23:19:09.443 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 23:19:09.446 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 23:19:09.446 [main] INFO  com.hospital.security.AuthService - User logged out
+2024-12-04 23:19:09.448 [main] INFO  com.hospital.security.AuthService - Attempting login for user: nonexistent
+2024-12-04 23:19:14.547 [AWT-EventQueue-0] ERROR com.hospital.views.LoginFrame - Error opening dashboard: 
+java.lang.ClassCastException: class com.hospital.models.User cannot be cast to class com.hospital.models.CommunityManager (com.hospital.models.User and com.hospital.models.CommunityManager are in unnamed module of loader 'app')
+	at com.hospital.views.CommunityManagerDashboard.<init>(CommunityManagerDashboard.java:30)
+	at com.hospital.views.LoginFrame.lambda$openDashboard$1(LoginFrame.java:120)
+	at java.desktop/java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:318)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:773)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:714)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:742)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+2024-12-04 23:19:21.752 [main] INFO  com.hospital.data.DataManager - Adding doctor: Dr. John Smith
+2024-12-04 23:19:21.754 [main] INFO  com.hospital.data.DataManager - Adding patient: Jane Doe with ID: 2 to patients map
+2024-12-04 23:19:21.754 [main] INFO  com.hospital.data.DataManager - Adding patient: Jane Doe with ID: 2 to users map
+2024-12-04 23:19:21.754 [main] INFO  com.hospital.data.DataManager - Successfully added patient to both maps
+2024-12-04 23:19:21.754 [main] INFO  com.hospital.data.DataManager - Adding pharmacist: Bob Wilson
+2024-12-04 23:19:21.755 [main] INFO  com.hospital.data.DataManager - Adding IT support: Mike Brown
+2024-12-04 23:19:21.755 [main] INFO  com.hospital.data.DataManager - Adding dietician: Sarah Johnson
+2024-12-04 23:19:21.755 [main] INFO  com.hospital.data.DataManager - Adding hospital: City General Hospital
+2024-12-04 23:19:29.193 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: admin

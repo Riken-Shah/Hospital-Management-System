@@ -37,7 +37,7 @@ public class DieticianDashboard extends BaseDashboard {
 
     private void initializeTableModels() {
         // Initialize patients table model
-        String[] patientColumns = {"Patient ID", "Name", "Age", "Diagnosis", "Last Visit"};
+        String[] patientColumns = {"Patient ID", "Name", "Age", "Gender", "Phone", "Last Visit"};
         patientsTableModel = new DefaultTableModel(patientColumns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -150,13 +150,27 @@ public class DieticianDashboard extends BaseDashboard {
         List<User> patients = dataStore.getPatientsForDietician(currentUser.getId());
         for (User patient : patients) {
             Patient patientDetails = dataStore.getPatient(patient.getId());
-            patientsTableModel.addRow(new Object[]{
-                patient.getId(),
-                patient.getName(),
-                patient.getAge(),
-                patientDetails != null ? patientDetails.getDiagnosis() : "N/A",
-                patientDetails != null ? patientDetails.getLastVisit().format(DateTimeFormatter.ISO_DATE) : "N/A"
-            });
+            if (patientDetails != null) {
+                patientsTableModel.addRow(new Object[]{
+                    patient.getId(),
+                    patient.getName(),
+                    patientDetails.getAge(),
+                    patientDetails.getGender(),
+                    patientDetails.getPhone(),
+                    patientDetails.getLastVisit() != null ? patientDetails.getLastVisit().format(DateTimeFormatter.ISO_DATE) : "N/A"
+                });
+            }
+        }
+    }
+
+    private void populatePatientComboBox(JComboBox<ComboItem> patientCombo, int preSelectedPatientId) {
+        List<User> patients = dataStore.getPatientsForDietician(currentUser.getId());
+        for (User patient : patients) {
+            ComboItem item = new ComboItem(patient.getId(), patient.getName());
+            patientCombo.addItem(item);
+            if (patient.getId() == preSelectedPatientId) {
+                patientCombo.setSelectedItem(item);
+            }
         }
     }
 
@@ -206,14 +220,15 @@ public class DieticianDashboard extends BaseDashboard {
         consultationsTableModel.setRowCount(0);
         List<DietConsultation> consultations = dataStore.getDietConsultationsForDietician(currentUser.getId());
         for (DietConsultation consultation : consultations) {
-            Patient patient = dataStore.getPatient(consultation.getPatientId());
-            consultationsTableModel.addRow(new Object[]{
-                consultation.getConsultationDate().format(DateTimeFormatter.ISO_DATE),
-                patient != null ? patient.getName() : "Unknown",
-                consultation.getStatus(),
-                consultation.getNotes(),
-                consultation.getNextAppointment().format(DateTimeFormatter.ISO_DATE)
-            });
+            User patient = dataStore.getUserById(consultation.getPatientId());
+            if (patient != null) {
+                consultationsTableModel.addRow(new Object[]{
+                    consultation.getId(),
+                    patient.getName(),
+                    consultation.getConsultationDate().format(DateTimeFormatter.ISO_DATE),
+                    consultation.getStatus()
+                });
+            }
         }
     }
 
