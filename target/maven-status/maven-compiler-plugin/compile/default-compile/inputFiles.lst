@@ -10,6 +10,7 @@
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/models/Staff.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/model/Ticket.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/models/Hospital.java
+/Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/models/Supplier.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/security/JwtService.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/models/LabTest.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/views/DieticianDashboard.java
@@ -26,6 +27,7 @@
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/model/Dietician.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/model/ITSupport.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/views/BaseDashboard.java
+/Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/models/Medicine.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/model/User.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/views/SystemAdminDashboard.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/models/Bill.java
@@ -40,6 +42,7 @@
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/model/Prescription.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/model/Appointment.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/model/MedicationTransfer.java
+/Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/models/MedicineOrder.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/data/DataManager.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/views/LoginFrame.java
 /Users/rikenshah/Desktop/Projects/Hospital Management System/src/main/java/com/hospital/models/MedicationTransfer.java

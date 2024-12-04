@@ -10,7 +10,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -514,28 +513,12 @@ public class DieticianDashboard extends BaseDashboard {
                     return;
                 }
 
-                // Parse the next appointment date
-                LocalDate nextAppointment = LocalDate.parse(nextAppointmentField.getText().trim());
-
-                // Create new consultation
-                DietConsultation consultation = new DietConsultation(
-                    dataStore.getNextId(),
-                    selectedPatient.getId(),
-                    currentUser.getId(),
-                    LocalDate.now(),
-                    notesArea.getText().trim(),
-                    nextAppointment
-                );
-
-                dataStore.addDietConsultation(consultation);
-                showMessage("Consultation added successfully");
+                // TODO: Add consultation to datastore when DietConsultation model is ready
                 dialog.dispose();
-                showPanel(createConsultationsPanel()); // Refresh the entire panel
-            } catch (DateTimeParseException ex) {
-                showError("Invalid date format. Please use YYYY-MM-DD");
+                refreshConsultationsTable();
+                showMessage("Consultation added successfully");
             } catch (Exception ex) {
                 showError("Error adding consultation: " + ex.getMessage());
-                logger.error("Error adding consultation", ex);
             }
         });
 

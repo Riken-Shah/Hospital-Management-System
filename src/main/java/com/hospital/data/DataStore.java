@@ -16,6 +16,9 @@ public class DataStore {
     private Map<Integer, DietPlan> dietPlans;
     private Map<Integer, Prescription> prescriptions;
     private Map<Integer, DietConsultation> dietConsultations;
+    private Map<Integer, Medicine> medicines;
+    private Map<Integer, MedicineOrder> medicineOrders;
+    private Map<Integer, Supplier> suppliers;
 
     public static synchronized DataStore getInstance() {
         if (instance == null) {
@@ -32,6 +35,9 @@ public class DataStore {
         dietPlans = new HashMap<>();
         prescriptions = new HashMap<>();
         dietConsultations = new HashMap<>();
+        medicines = new HashMap<>();
+        medicineOrders = new HashMap<>();
+        suppliers = new HashMap<>();
         addSampleData();
     }
 
@@ -40,6 +46,7 @@ public class DataStore {
         addUser(new User(getNextId(), "John Doe", "johndoe", "DOCTOR", 1));
         addUser(new User(getNextId(), "Jane Smith", "janesmith", "PATIENT", 1));
         addUser(new User(getNextId(), "Alice Brown", "alicebrown", "DIETICIAN", 1));
+        addUser(new User(getNextId(), "Bob Wilson", "bobwilson", "PHARMACIST", 1));
 
         // Add sample patients
         Patient patient = new Patient(2, "Jane Smith", 35, "None", LocalDate.now(),
@@ -74,6 +81,30 @@ public class DataStore {
         DietPlan plan = new DietPlan(getNextId(), 2, 3, LocalDate.now(), LocalDate.now().plusMonths(1),
                 "Weight loss", restrictions, recommendations, "Initial plan", "ACTIVE");
         addDietPlan(plan);
+
+        // Add sample medicines
+        Medicine med1 = new Medicine(getNextId(), "Paracetamol", 100, 5.99, LocalDate.now().plusYears(2), "Tablets", "Pain Relief");
+        Medicine med2 = new Medicine(getNextId(), "Amoxicillin", 50, 15.99, LocalDate.now().plusYears(1), "Capsules", "Antibiotics");
+        Medicine med3 = new Medicine(getNextId(), "Ibuprofen", 75, 7.99, LocalDate.now().plusYears(2), "Tablets", "Pain Relief");
+        addMedicine(med1);
+        addMedicine(med2);
+        addMedicine(med3);
+
+        // Add sample suppliers
+        Supplier sup1 = new Supplier(getNextId(), "PharmaCorp", "123-456-7890", "supplier@pharmacorp.com", "A");
+        Supplier sup2 = new Supplier(getNextId(), "MediSupply", "098-765-4321", "contact@medisupply.com", "A");
+        addSupplier(sup1);
+        addSupplier(sup2);
+
+        // Add sample orders
+        MedicineOrder order1 = new MedicineOrder(getNextId(), sup1.getId(), LocalDate.now().minusDays(5), "DELIVERED");
+        order1.addItem(med1.getId(), 50);
+        order1.addItem(med2.getId(), 25);
+        addMedicineOrder(order1);
+
+        MedicineOrder order2 = new MedicineOrder(getNextId(), sup2.getId(), LocalDate.now().minusDays(2), "PENDING");
+        order2.addItem(med3.getId(), 30);
+        addMedicineOrder(order2);
     }
 
     public void clear() {
@@ -84,6 +115,9 @@ public class DataStore {
         dietPlans.clear();
         prescriptions.clear();
         dietConsultations.clear();
+        medicines.clear();
+        medicineOrders.clear();
+        suppliers.clear();
         nextId = 1;
     }
 
@@ -271,5 +305,68 @@ public class DataStore {
         return dietConsultations.values().stream()
                 .filter(consultation -> consultation.getPatientId() == patientId)
                 .collect(Collectors.toList());
+    }
+
+    // Medicine operations
+    public void addMedicine(Medicine medicine) {
+        medicines.put(medicine.getId(), medicine);
+    }
+
+    public Medicine getMedicine(int id) {
+        return medicines.get(id);
+    }
+
+    public List<Medicine> getAllMedicines() {
+        return new ArrayList<>(medicines.values());
+    }
+
+    public void updateMedicine(Medicine medicine) {
+        medicines.put(medicine.getId(), medicine);
+    }
+
+    public void deleteMedicine(int id) {
+        medicines.remove(id);
+    }
+
+    // Supplier operations
+    public void addSupplier(Supplier supplier) {
+        suppliers.put(supplier.getId(), supplier);
+    }
+
+    public Supplier getSupplier(int id) {
+        return suppliers.get(id);
+    }
+
+    public List<Supplier> getAllSuppliers() {
+        return new ArrayList<>(suppliers.values());
+    }
+
+    public void updateSupplier(Supplier supplier) {
+        suppliers.put(supplier.getId(), supplier);
+    }
+
+    public void deleteSupplier(int id) {
+        suppliers.remove(id);
+    }
+
+    // Order operations
+    public void addMedicineOrder(MedicineOrder order) {
+        medicineOrders.put(order.getId(), order);
+    }
+
+    public MedicineOrder getMedicineOrder(int id) {
+        return medicineOrders.get(id);
+    }
+
+    public List<MedicineOrder> getAllMedicineOrders() {
+        return new ArrayList<>(medicineOrders.values());
+    }
+
+    public void updateMedicineOrder(MedicineOrder order) {
+        medicineOrders.put(order.getId(), order);
+    }
+
+    public void deleteMedicineOrder(int id) {
+        medicineOrders.remove(id);
     }
 } 
