@@ -2,12 +2,15 @@
 
 The system comes with pre-initialized user accounts for testing purposes:
 
-| Role | Username | Default Role |
-|------|----------|--------------|
-| Administrator | admin | ADMIN |
-| Doctor | doctor1 | DOCTOR |
-| Patient | patient1 | PATIENT |
-| Community Manager | community1 | COMMUNITY_MANAGER |
+| Role               | Username   | Default Role         |
+|--------------------|------------|----------------------|
+| Administrator      | admin      | ADMIN                |
+| Doctor            | doctor     | DOCTOR               |
+| Patient           | patient    | PATIENT              |
+| Dietician         | dietician  | DIETICIAN            |
+| Pharmacist        | pharmacist | PHARMACIST           |
+| IT Support        | itsupport  | IT_SUPPORT           |
+| Community Manager | community  | COMMUNITY_MANAGER    |
 
 ### Important Notes:
 1. For development and testing purposes:
@@ -28,4 +31,7 @@ The system comes with pre-initialized user accounts for testing purposes:
    - ADMIN: Full system access
    - DOCTOR: Patient management, appointments, prescriptions
    - PATIENT: View appointments, medical records, prescriptions
-   - COMMUNITY_MANAGER: Community health metrics, vaccination drives 
+   - DIETICIAN: Manage diet plans and consultations
+   - PHARMACIST: Manage pharmacy inventory and medication transfers
+   - IT_SUPPORT: Manage support tickets and system issues
+   - COMMUNITY_MANAGER: Community health metrics, vaccination drives

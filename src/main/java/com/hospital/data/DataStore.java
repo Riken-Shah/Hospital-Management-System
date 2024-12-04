@@ -62,42 +62,62 @@ public class DataStore {
         Community community = new Community(getNextId(), "Downtown Community", "Downtown Area", 50000, 1);
         communities.put(community.getId(), community);
 
-        // Add dummy users
+        // Add dummy admin
         User admin = new User(getNextId(), "Admin User", "admin", "ADMIN", 1);
         users.put(admin.getId(), admin);
 
-        User doctor = new User(getNextId(), "Dr. John Smith", "doctor1", "DOCTOR", 1);
+        // Add dummy doctor
+        User doctor = new User(getNextId(), "Dr. John Smith", "doctor", "DOCTOR", 1);
         users.put(doctor.getId(), doctor);
 
         // Add dummy patient
-        Patient patient = new Patient(getNextId(), "Jane Doe", "patient1", 1);
+        User patientUser = new User(getNextId(), "Jane Doe", "patient", "PATIENT", 1);
+        users.put(patientUser.getId(), patientUser);
+        Patient patient = new Patient(patientUser.getId(), "Jane Doe", "patient", 1);
+        patient.setAge(30);
+        patient.setGender("Female");
+        patient.setPhone("555-0123");
+        patient.setBloodGroup("A+");
+        patient.setAllergies("None");
         patients.put(patient.getId(), patient);
 
+        // Add dummy dietician
+        User dietician = new User(getNextId(), "Sarah Johnson", "dietician", "DIETICIAN", 1);
+        users.put(dietician.getId(), dietician);
+
+        // Add dummy pharmacist
+        User pharmacist = new User(getNextId(), "Emily Brown", "pharmacist", "PHARMACIST", 1);
+        users.put(pharmacist.getId(), pharmacist);
+
+        // Add dummy IT support
+        User itSupport = new User(getNextId(), "Mike Tech", "itsupport", "IT_SUPPORT", 1);
+        users.put(itSupport.getId(), itSupport);
+
+        // Add dummy community manager
+        CommunityManager communityManager = new CommunityManager(getNextId(), "John Community", "community", 1, "North Region", "555-0123", 50000);
+        users.put(communityManager.getId(), communityManager);
+        communityManagers.add(communityManager);
+
         // Add dummy appointments
-        Appointment appointment1 = new Appointment(1, 1, 2, LocalDateTime.now().plusDays(1), "Checkup", 
+        Appointment appointment1 = new Appointment(1, patientUser.getId(), doctor.getId(), LocalDateTime.now().plusDays(1), "Checkup", 
             "SCHEDULED", "Regular checkup", "", 30, "Room 101");
         appointments.put(appointment1.getId(), appointment1);
 
         // Add dummy medical records
-        MedicalRecord record1 = new MedicalRecord(1, 1, 2, "Checkup", "Regular health checkup");
+        MedicalRecord record1 = new MedicalRecord(1, patientUser.getId(), doctor.getId(), "Checkup", "Regular health checkup");
         medicalRecords.put(record1.getId(), record1);
 
         // Add dummy diet plan
         List<String> restrictions = Arrays.asList("Nuts", "Dairy");
         List<String> recommendations = Arrays.asList("More vegetables", "Less sugar");
-        DietPlan plan = new DietPlan(getNextId(), 2, 3, LocalDate.now(), LocalDate.now().plusMonths(1),
+        DietPlan plan = new DietPlan(getNextId(), patientUser.getId(), dietician.getId(), LocalDate.now(), LocalDate.now().plusMonths(1),
                 "Weight loss", restrictions, recommendations, "Initial plan", "ACTIVE");
         addDietPlan(plan);
 
         // Add dummy tickets
-        addTicket(new ITSupportTicket(getNextId(), 2, "Hardware", "Laptop not turning on", "HIGH"));
-        addTicket(new ITSupportTicket(getNextId(), 3, "Software", "Email client not working", "MEDIUM"));
-        addTicket(new ITSupportTicket(getNextId(), 4, "Network", "Unable to connect to printer", "LOW"));
-
-        // Add dummy community manager
-        CommunityManager communityManager = new CommunityManager(getNextId(), "John Community", "community1", 1, "North Region", "555-0123", 50000);
-        users.put(communityManager.getId(), communityManager);
-        communityManagers.add(communityManager);
+        addTicket(new ITSupportTicket(getNextId(), patientUser.getId(), "Hardware", "Laptop not turning on", "HIGH"));
+        addTicket(new ITSupportTicket(getNextId(), doctor.getId(), "Software", "Email client not working", "MEDIUM"));
+        addTicket(new ITSupportTicket(getNextId(), pharmacist.getId(), "Network", "Unable to connect to printer", "LOW"));
         
         // Add dummy health metrics
         healthMetrics.addAll(Arrays.asList(
