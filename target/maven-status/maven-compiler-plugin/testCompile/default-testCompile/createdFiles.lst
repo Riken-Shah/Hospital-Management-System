@@ -1,4 +1,5 @@
 com/hospital/views/DieticianDashboardTest.class
 com/hospital/security/AuthServiceTest.class
 com/hospital/data/DataStoreTest.class
+com/hospital/views/PatientDashboardTest.class
 com/hospital/views/LoginFrameTest.class

@@ -1,7 +1,6 @@
 package com.hospital.views;
 
 import com.hospital.models.User;
-import com.hospital.security.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,30 +9,49 @@ import java.awt.*;
 
 public abstract class BaseDashboard extends JFrame {
     private static final Logger logger = LoggerFactory.getLogger(BaseDashboard.class);
-    protected final User currentUser;
-    protected static boolean isHeadless = GraphicsEnvironment.isHeadless();
-    protected static final AuthService authService = new AuthService();
+    protected User currentUser;
+    protected JPanel contentPanel;
+    protected boolean isHeadless = GraphicsEnvironment.isHeadless();
 
     public BaseDashboard(User currentUser) {
         this.currentUser = currentUser;
         if (!isHeadless) {
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            setSize(1024, 768);
-            setLocationRelativeTo(null);
+            setupFrame();
         }
+    }
+
+    private void setupFrame() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1200, 800);
+        setLocationRelativeTo(null);
+
+        // Create content panel
+        contentPanel = new JPanel(new BorderLayout(10, 10));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        add(contentPanel, BorderLayout.CENTER);
     }
 
     protected abstract void initializeMenu();
 
+    protected void showPanel(JPanel panel) {
+        if (contentPanel != null) {
+            contentPanel.removeAll();
+            contentPanel.add(panel, BorderLayout.CENTER);
+            contentPanel.revalidate();
+            contentPanel.repaint();
+        }
+    }
+
     protected JButton createMenuButton(String text) {
         JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(150, 40));
+        button.setPreferredSize(new Dimension(200, 40));
+        button.setFont(new Font("Arial", Font.PLAIN, 14));
         return button;
     }
 
     protected JPanel createFormPanel() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JPanel panel = new JPanel();
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         return panel;
     }
 
@@ -41,57 +59,27 @@ public abstract class BaseDashboard extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 5, 5, 5);
         return gbc;
     }
 
     protected void addProfileField(JPanel panel, String label, String value, GridBagConstraints gbc) {
         gbc.gridx = 0;
+        gbc.gridwidth = 1;
         panel.add(new JLabel(label + ":"), gbc);
-        
         gbc.gridx = 1;
-        panel.add(new JLabel(value), gbc);
-        
+        panel.add(new JLabel(value != null ? value : "N/A"), gbc);
         gbc.gridy++;
     }
 
-    protected void showPanel(JPanel panel) {
-        // Remove existing center panel if any
-        Component centerComponent = ((BorderLayout) getContentPane().getLayout()).getLayoutComponent(BorderLayout.CENTER);
-        if (centerComponent != null) {
-            remove(centerComponent);
-        }
-        add(panel, BorderLayout.CENTER);
-        revalidate();
-        repaint();
-    }
-
     protected void showError(String message) {
-        if (!isHeadless) {
-            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    protected void showSuccess(String message) {
-        if (!isHeadless) {
-            JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    protected void showConfirmation(String message, Runnable onConfirm) {
-        if (!isHeadless) {
-            int result = JOptionPane.showConfirmDialog(this, message, "Confirm", JOptionPane.YES_NO_OPTION);
-            if (result == JOptionPane.YES_OPTION) {
-                onConfirm.run();
-            }
-        }
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     protected void logout() {
+        logger.info("User {} logged out", currentUser.getUsername());
         dispose();
-        if (!isHeadless) {
-            SwingUtilities.invokeLater(() -> new LoginFrame(authService).setVisible(true));
-        }
+        // TODO: Show login screen
     }
 } 
