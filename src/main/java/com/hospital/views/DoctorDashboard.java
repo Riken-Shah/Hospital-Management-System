@@ -1,24 +1,27 @@
 package com.hospital.views;
 
-import com.hospital.models.User;
+import com.hospital.models.*;
+import com.hospital.data.DataStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import java.awt.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
-import com.hospital.models.MedicalRecord;
-import com.hospital.data.DataStore;
 
 public class DoctorDashboard extends BaseDashboard {
     private static final Logger logger = LoggerFactory.getLogger(DoctorDashboard.class);
     private JPanel menuPanel;
+    private final DataStore dataStore;
 
     public DoctorDashboard(User currentUser) {
         super(currentUser);
+        this.dataStore = DataStore.getInstance();
         setTitle("Doctor Dashboard - " + currentUser.getName());
         initializeMenu();
         if (!isHeadless) {
@@ -61,10 +64,9 @@ public class DoctorDashboard extends BaseDashboard {
         JPanel panel = createFormPanel();
         panel.setLayout(new BorderLayout(10, 10));
 
-        DefaultTableModel model = new DefaultTableModel(
-            new String[]{"Patient ID", "Name", "Age", "Medical History", "Last Visit"},
-            0
-        ) {
+        // Create table model
+        String[] columnNames = {"Patient ID", "Name", "Age", "Diagnosis", "Last Visit"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -72,20 +74,21 @@ public class DoctorDashboard extends BaseDashboard {
         };
 
         // Fetch and populate patient data
-        List<User> patients = DataStore.getInstance().getPatients();
-        for (User patient : patients) {
+        List<Patient> patients = dataStore.getAllPatients();
+        for (Patient patient : patients) {
             model.addRow(new Object[]{
                 patient.getId(),
                 patient.getName(),
                 patient.getAge(),
-                "Click to view",
-                "N/A"
+                patient.getDiagnosis(),
+                patient.getLastVisit()
             });
         }
 
         JTable table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
 
+        // Create buttons panel
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton addButton = new JButton("Add Patient");
         JButton viewButton = new JButton("View Details");
@@ -123,67 +126,79 @@ public class DoctorDashboard extends BaseDashboard {
 
     private void showAddPatientDialog() {
         JDialog dialog = new JDialog(this, "Add New Patient", true);
-        dialog.setLayout(new GridBagLayout());
+        dialog.setLayout(new BorderLayout(10, 10));
+
+        // Create form panel
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JTextField nameField = new JTextField(20);
-        JTextField ageField = new JTextField(20);
-        JTextField emailField = new JTextField(20);
+        // Add form fields
+        JTextField nameField = addFormField(formPanel, "Name:", "", gbc);
+        JTextField ageField = addFormField(formPanel, "Age:", "", gbc);
+        JTextField genderField = addFormField(formPanel, "Gender:", "", gbc);
+        JTextField bloodGroupField = addFormField(formPanel, "Blood Group:", "", gbc);
+        JTextField phoneField = addFormField(formPanel, "Phone:", "", gbc);
+        JTextField emailField = addFormField(formPanel, "Email:", "", gbc);
+        JTextField addressField = addFormField(formPanel, "Address:", "", gbc);
+        JTextField emergencyContactField = addFormField(formPanel, "Emergency Contact:", "", gbc);
+        JTextField allergiesField = addFormField(formPanel, "Allergies:", "", gbc);
+        JTextField diagnosisField = addFormField(formPanel, "Current Diagnosis:", "", gbc);
 
-        dialog.add(new JLabel("Name:"), gbc);
-        gbc.gridx = 1;
-        dialog.add(nameField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        dialog.add(new JLabel("Age:"), gbc);
-        gbc.gridx = 1;
-        dialog.add(ageField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        dialog.add(new JLabel("Email:"), gbc);
-        gbc.gridx = 1;
-        dialog.add(emailField, gbc);
-
+        // Add buttons panel
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton saveButton = new JButton("Save");
+        JButton cancelButton = new JButton("Cancel");
+
         saveButton.addActionListener(e -> {
             try {
-                String name = nameField.getText();
-                int age = Integer.parseInt(ageField.getText());
-                String email = emailField.getText();
-                
-                // Create username from name (lowercase, no spaces)
-                String username = name.toLowerCase().replaceAll("\\s+", "");
-                
-                // Create new user with proper constructor
-                User newPatient = new User(DataStore.getInstance().getNextId(), name, username, "PATIENT", currentUser.getHospitalId());
-                newPatient.setAge(age);
-                newPatient.setEmail(email);
-                
-                DataStore.getInstance().addUser(newPatient);
+                // Create new patient
+                Patient patient = new Patient(
+                    dataStore.getNextId(),
+                    nameField.getText(),
+                    Integer.parseInt(ageField.getText()),
+                    diagnosisField.getText(),
+                    LocalDate.now(),
+                    phoneField.getText(),
+                    emailField.getText(),
+                    addressField.getText(),
+                    bloodGroupField.getText(),
+                    allergiesField.getText(),
+                    LocalDate.now().minusYears(Integer.parseInt(ageField.getText())),
+                    genderField.getText(),
+                    emergencyContactField.getText()
+                );
+
+                // Save to data store
+                dataStore.addPatient(patient);
                 dialog.dispose();
                 refreshPatientsPanel();
+                showSuccess("Patient added successfully");
             } catch (NumberFormatException ex) {
-                showError("Please enter valid age");
+                showError("Please enter a valid age");
             }
         });
 
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        dialog.add(saveButton, gbc);
+        cancelButton.addActionListener(e -> dialog.dispose());
 
-        dialog.pack();
+        buttonsPanel.add(saveButton);
+        buttonsPanel.add(cancelButton);
+
+        // Add panels to dialog
+        dialog.add(new JScrollPane(formPanel), BorderLayout.CENTER);
+        dialog.add(buttonsPanel, BorderLayout.SOUTH);
+
+        dialog.setSize(500, 700);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
 
     private void showPatientDetails(int patientId) {
-        User patient = DataStore.getInstance().getUserById(patientId);
+        Patient patient = dataStore.getPatient(patientId);
         if (patient == null) {
             showError("Patient not found");
             return;
@@ -207,7 +222,7 @@ public class DoctorDashboard extends BaseDashboard {
         // Add medical history
         JTextArea historyArea = new JTextArea(5, 20);
         historyArea.setEditable(false);
-        List<MedicalRecord> records = DataStore.getInstance().getMedicalRecords(patientId);
+        List<MedicalRecord> records = dataStore.getMedicalRecords(patientId);
         for (MedicalRecord record : records) {
             historyArea.append(record.getDate() + ": " + record.getDescription() + "\n");
         }
@@ -243,9 +258,29 @@ public class DoctorDashboard extends BaseDashboard {
         panel.setLayout(new BorderLayout(10, 10));
 
         // Create table model
-        String[] columnNames = {"Time", "Patient", "Type", "Status", "Notes"};
-        Object[][] data = {};
-        JTable table = new JTable(data, columnNames);
+        String[] columnNames = {"ID", "Patient", "Date", "Type", "Status", "Notes"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        // Fetch and populate appointment data
+        List<Appointment> appointments = dataStore.getAppointmentsByDoctorId(currentUser.getId());
+        for (Appointment appointment : appointments) {
+            Patient patient = dataStore.getPatient(appointment.getPatientId());
+            model.addRow(new Object[]{
+                appointment.getId(),
+                patient.getName(),
+                appointment.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
+                appointment.getType(),
+                appointment.getStatus(),
+                appointment.getNotes()
+            });
+        }
+
+        JTable table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
 
         // Create buttons panel
@@ -254,9 +289,25 @@ public class DoctorDashboard extends BaseDashboard {
         JButton viewButton = new JButton("View Details");
         JButton cancelButton = new JButton("Cancel Appointment");
 
-        scheduleButton.addActionListener(e -> showError("Schedule appointment feature coming soon!"));
-        viewButton.addActionListener(e -> showError("View appointment details feature coming soon!"));
-        cancelButton.addActionListener(e -> showError("Cancel appointment feature coming soon!"));
+        scheduleButton.addActionListener(e -> showScheduleAppointmentDialog());
+        viewButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow >= 0) {
+                int appointmentId = (int) table.getValueAt(selectedRow, 0);
+                showAppointmentDetails(appointmentId);
+            } else {
+                showError("Please select an appointment first");
+            }
+        });
+        cancelButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow >= 0) {
+                int appointmentId = (int) table.getValueAt(selectedRow, 0);
+                cancelAppointment(appointmentId);
+            } else {
+                showError("Please select an appointment first");
+            }
+        });
 
         buttonsPanel.add(scheduleButton);
         buttonsPanel.add(viewButton);
@@ -268,63 +319,308 @@ public class DoctorDashboard extends BaseDashboard {
         return panel;
     }
 
-    private JPanel createPrescriptionsPanel() {
-        JPanel panel = createFormPanel();
-        panel.setLayout(new BorderLayout(10, 10));
+    private void showScheduleAppointmentDialog() {
+        JDialog dialog = new JDialog(this, "Schedule Appointment", true);
+        dialog.setLayout(new BorderLayout(10, 10));
 
-        // Create table model
-        String[] columnNames = {"Date", "Patient", "Medication", "Dosage", "Duration"};
-        Object[][] data = {};
-        JTable table = new JTable(data, columnNames);
-        JScrollPane scrollPane = new JScrollPane(table);
+        // Create form panel
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Create buttons panel
+        // Create patient selection combo box
+        List<Patient> patients = dataStore.getAllPatients();
+        JComboBox<Patient> patientCombo = new JComboBox<>(patients.toArray(new Patient[0]));
+        patientCombo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                        boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Patient) {
+                    Patient patient = (Patient) value;
+                    setText(patient.getName());
+                }
+                return this;
+            }
+        });
+
+        // Add form fields
+        gbc.gridx = 0;
+        formPanel.add(new JLabel("Patient:"), gbc);
+        gbc.gridx = 1;
+        formPanel.add(patientCombo, gbc);
+
+        gbc.gridy++;
+        JTextField dateField = addFormField(formPanel, "Date (YYYY-MM-DD):", "", gbc);
+        JTextField timeField = addFormField(formPanel, "Time (HH:mm):", "", gbc);
+        JTextField typeField = addFormField(formPanel, "Type:", "", gbc);
+        JTextField durationField = addFormField(formPanel, "Duration (minutes):", "30", gbc);
+        JTextField roomField = addFormField(formPanel, "Room:", "", gbc);
+
+        // Add notes area
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        formPanel.add(new JLabel("Notes:"), gbc);
+        gbc.gridy++;
+        JTextArea notesArea = new JTextArea(5, 30);
+        formPanel.add(new JScrollPane(notesArea), gbc);
+
+        // Add buttons panel
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton addButton = new JButton("New Prescription");
-        JButton viewButton = new JButton("View Details");
-        JButton editButton = new JButton("Edit Prescription");
+        JButton saveButton = new JButton("Save");
+        JButton cancelButton = new JButton("Cancel");
 
-        addButton.addActionListener(e -> showError("New prescription feature coming soon!"));
-        viewButton.addActionListener(e -> showError("View prescription details feature coming soon!"));
-        editButton.addActionListener(e -> showError("Edit prescription feature coming soon!"));
+        saveButton.addActionListener(e -> {
+            try {
+                Patient selectedPatient = (Patient) patientCombo.getSelectedItem();
+                if (selectedPatient == null) {
+                    showError("Please select a patient");
+                    return;
+                }
 
-        buttonsPanel.add(addButton);
-        buttonsPanel.add(viewButton);
+                // Parse date and time
+                LocalDateTime dateTime = LocalDateTime.parse(
+                    dateField.getText() + " " + timeField.getText(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                );
+
+                // Create new appointment
+                Appointment appointment = new Appointment(
+                    dataStore.getNextId(),
+                    selectedPatient.getId(),
+                    currentUser.getId(),
+                    dateTime,
+                    typeField.getText(),
+                    "SCHEDULED",
+                    notesArea.getText(),
+                    "Initial consultation",
+                    Integer.parseInt(durationField.getText()),
+                    roomField.getText()
+                );
+
+                // Save to data store
+                dataStore.addAppointment(appointment);
+                dialog.dispose();
+                showPanel(createAppointmentsPanel());
+                showSuccess("Appointment scheduled successfully");
+            } catch (Exception ex) {
+                showError("Please enter valid date and time (YYYY-MM-DD HH:mm)");
+            }
+        });
+
+        cancelButton.addActionListener(e -> dialog.dispose());
+
+        buttonsPanel.add(saveButton);
+        buttonsPanel.add(cancelButton);
+
+        // Add panels to dialog
+        dialog.add(new JScrollPane(formPanel), BorderLayout.CENTER);
+        dialog.add(buttonsPanel, BorderLayout.SOUTH);
+
+        dialog.setSize(500, 600);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
+    private void showAppointmentDetails(int appointmentId) {
+        Appointment appointment = dataStore.getAppointmentById(appointmentId);
+        if (appointment == null) {
+            showError("Appointment not found");
+            return;
+        }
+
+        Patient patient = dataStore.getPatient(appointment.getPatientId());
+        if (patient == null) {
+            showError("Patient not found");
+            return;
+        }
+
+        JDialog dialog = new JDialog(this, "Appointment Details", true);
+        dialog.setLayout(new BorderLayout(10, 10));
+
+        // Create details panel
+        JPanel detailsPanel = new JPanel(new GridBagLayout());
+        detailsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Add appointment details
+        addDetailField(detailsPanel, "Patient:", patient.getName(), gbc);
+        addDetailField(detailsPanel, "Date:", appointment.getDateTime().format(
+            DateTimeFormatter.ofPattern("yyyy-MM-dd")), gbc);
+        addDetailField(detailsPanel, "Time:", appointment.getDateTime().format(
+            DateTimeFormatter.ofPattern("HH:mm")), gbc);
+        addDetailField(detailsPanel, "Type:", appointment.getType(), gbc);
+        addDetailField(detailsPanel, "Status:", appointment.getStatus(), gbc);
+        addDetailField(detailsPanel, "Duration:", appointment.getDuration() + " minutes", gbc);
+        addDetailField(detailsPanel, "Room:", appointment.getRoom(), gbc);
+
+        // Add notes section
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        detailsPanel.add(new JLabel("Notes:"), gbc);
+        gbc.gridy++;
+        JTextArea notesArea = new JTextArea(appointment.getNotes(), 5, 30);
+        notesArea.setEditable(false);
+        detailsPanel.add(new JScrollPane(notesArea), gbc);
+
+        // Add buttons panel
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton editButton = new JButton("Edit");
+        JButton closeButton = new JButton("Close");
+
+        editButton.addActionListener(e -> {
+            dialog.dispose();
+            showEditAppointmentDialog(appointmentId);
+        });
+        closeButton.addActionListener(e -> dialog.dispose());
+
         buttonsPanel.add(editButton);
+        buttonsPanel.add(closeButton);
 
-        panel.add(scrollPane, BorderLayout.CENTER);
-        panel.add(buttonsPanel, BorderLayout.SOUTH);
+        // Add panels to dialog
+        dialog.add(new JScrollPane(detailsPanel), BorderLayout.CENTER);
+        dialog.add(buttonsPanel, BorderLayout.SOUTH);
 
+        dialog.setSize(500, 500);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
+    private void showEditAppointmentDialog(int appointmentId) {
+        Appointment appointment = dataStore.getAppointmentById(appointmentId);
+        if (appointment == null) {
+            showError("Appointment not found");
+            return;
+        }
+
+        JDialog dialog = new JDialog(this, "Edit Appointment", true);
+        dialog.setLayout(new BorderLayout(10, 10));
+
+        // Create form panel
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Add form fields
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        JTextField dateField = addFormField(formPanel, "Date (YYYY-MM-DD):",
+            appointment.getDateTime().format(dateFormatter), gbc);
+        JTextField timeField = addFormField(formPanel, "Time (HH:mm):",
+            appointment.getDateTime().format(timeFormatter), gbc);
+        JTextField typeField = addFormField(formPanel, "Type:", appointment.getType(), gbc);
+        JTextField durationField = addFormField(formPanel, "Duration (minutes):",
+            String.valueOf(appointment.getDuration()), gbc);
+        JTextField roomField = addFormField(formPanel, "Room:", appointment.getRoom(), gbc);
+
+        // Add status combo box
+        String[] statuses = {"SCHEDULED", "COMPLETED", "CANCELLED", "NO_SHOW"};
+        JComboBox<String> statusCombo = new JComboBox<>(statuses);
+        statusCombo.setSelectedItem(appointment.getStatus());
+        gbc.gridx = 0;
+        formPanel.add(new JLabel("Status:"), gbc);
+        gbc.gridx = 1;
+        formPanel.add(statusCombo, gbc);
+        gbc.gridy++;
+
+        // Add notes area
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        formPanel.add(new JLabel("Notes:"), gbc);
+        gbc.gridy++;
+        JTextArea notesArea = new JTextArea(appointment.getNotes(), 5, 30);
+        formPanel.add(new JScrollPane(notesArea), gbc);
+
+        // Add buttons panel
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton saveButton = new JButton("Save");
+        JButton cancelButton = new JButton("Cancel");
+
+        saveButton.addActionListener(e -> {
+            try {
+                // Parse date and time
+                LocalDateTime dateTime = LocalDateTime.parse(
+                    dateField.getText() + " " + timeField.getText(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                );
+
+                // Update appointment
+                appointment.setDateTime(dateTime);
+                appointment.setType(typeField.getText());
+                appointment.setDuration(Integer.parseInt(durationField.getText()));
+                appointment.setRoom(roomField.getText());
+                appointment.setStatus((String) statusCombo.getSelectedItem());
+                appointment.setNotes(notesArea.getText());
+
+                // Save to data store
+                dataStore.updateAppointment(appointment);
+                dialog.dispose();
+                showPanel(createAppointmentsPanel());
+                showSuccess("Appointment updated successfully");
+            } catch (Exception ex) {
+                showError("Please enter valid date and time (YYYY-MM-DD HH:mm)");
+            }
+        });
+
+        cancelButton.addActionListener(e -> dialog.dispose());
+
+        buttonsPanel.add(saveButton);
+        buttonsPanel.add(cancelButton);
+
+        // Add panels to dialog
+        dialog.add(new JScrollPane(formPanel), BorderLayout.CENTER);
+        dialog.add(buttonsPanel, BorderLayout.SOUTH);
+
+        dialog.setSize(500, 600);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
+    private void cancelAppointment(int appointmentId) {
+        Appointment appointment = dataStore.getAppointmentById(appointmentId);
+        if (appointment == null) {
+            showError("Appointment not found");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Are you sure you want to cancel this appointment?",
+            "Confirm Cancellation",
+            JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            appointment.setStatus("CANCELLED");
+            dataStore.updateAppointment(appointment);
+            showPanel(createAppointmentsPanel());
+            showSuccess("Appointment cancelled successfully");
+        }
+    }
+
+    private JPanel createPrescriptionsPanel() {
+        // TODO: Implement prescriptions panel
+        JPanel panel = createFormPanel();
+        showError("Prescriptions feature coming soon!");
         return panel;
     }
 
     private JPanel createMedicalRecordsPanel() {
+        // TODO: Implement medical records panel
         JPanel panel = createFormPanel();
-        panel.setLayout(new BorderLayout(10, 10));
-
-        // Create table model
-        String[] columnNames = {"Date", "Patient", "Type", "Description", "Attachments"};
-        Object[][] data = {};
-        JTable table = new JTable(data, columnNames);
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        // Create buttons panel
-        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton addButton = new JButton("Add Record");
-        JButton viewButton = new JButton("View Details");
-        JButton uploadButton = new JButton("Upload Documents");
-
-        addButton.addActionListener(e -> showError("Add medical record feature coming soon!"));
-        viewButton.addActionListener(e -> showError("View record details feature coming soon!"));
-        uploadButton.addActionListener(e -> showError("Upload documents feature coming soon!"));
-
-        buttonsPanel.add(addButton);
-        buttonsPanel.add(viewButton);
-        buttonsPanel.add(uploadButton);
-
-        panel.add(scrollPane, BorderLayout.CENTER);
-        panel.add(buttonsPanel, BorderLayout.SOUTH);
-
+        showError("Medical records feature coming soon!");
         return panel;
     }
 
@@ -340,65 +636,115 @@ public class DoctorDashboard extends BaseDashboard {
         return panel;
     }
 
+    private JTextField addFormField(JPanel panel, String label, String value, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridwidth = 1;
+        panel.add(new JLabel(label), gbc);
+        gbc.gridx = 1;
+        JTextField field = new JTextField(value, 20);
+        panel.add(field, gbc);
+        gbc.gridy++;
+        return field;
+    }
+
+    private void addDetailField(JPanel panel, String label, String value, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridwidth = 1;
+        panel.add(new JLabel(label), gbc);
+        gbc.gridx = 1;
+        panel.add(new JLabel(value != null ? value : "N/A"), gbc);
+        gbc.gridy++;
+    }
+
+    protected void showSuccess(String message) {
+        JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     private void showEditPatientDialog(int patientId) {
-        User patient = DataStore.getInstance().getUserById(patientId);
+        Patient patient = dataStore.getPatient(patientId);
         if (patient == null) {
             showError("Patient not found");
             return;
         }
 
-        JDialog dialog = new JDialog(this, "Edit Patient", true);
-        dialog.setLayout(new GridBagLayout());
+        JDialog dialog = new JDialog(this, "Edit Patient - " + patient.getName(), true);
+        dialog.setLayout(new BorderLayout(10, 10));
+
+        // Create form panel
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JTextField nameField = new JTextField(patient.getName(), 20);
-        JTextField ageField = new JTextField(String.valueOf(patient.getAge()), 20);
-        JTextField emailField = new JTextField(patient.getEmail(), 20);
+        // Add form fields
+        JTextField nameField = addFormField(formPanel, "Name:", patient.getName(), gbc);
+        JTextField ageField = addFormField(formPanel, "Age:", String.valueOf(patient.getAge()), gbc);
+        JTextField genderField = addFormField(formPanel, "Gender:", patient.getGender(), gbc);
+        JTextField bloodGroupField = addFormField(formPanel, "Blood Group:", patient.getBloodGroup(), gbc);
+        JTextField phoneField = addFormField(formPanel, "Phone:", patient.getPhone(), gbc);
+        JTextField emailField = addFormField(formPanel, "Email:", patient.getEmail(), gbc);
+        JTextField addressField = addFormField(formPanel, "Address:", patient.getAddress(), gbc);
+        JTextField emergencyContactField = addFormField(formPanel, "Emergency Contact:", patient.getEmergencyContact(), gbc);
+        JTextField allergiesField = addFormField(formPanel, "Allergies:", patient.getAllergies(), gbc);
+        JTextField diagnosisField = addFormField(formPanel, "Current Diagnosis:", patient.getDiagnosis(), gbc);
 
-        dialog.add(new JLabel("Name:"), gbc);
-        gbc.gridx = 1;
-        dialog.add(nameField, gbc);
+        // Add medications section
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        formPanel.add(new JLabel("Current Medications (one per line):"), gbc);
+        gbc.gridy++;
+        JTextArea medicationsArea = new JTextArea(5, 30);
+        for (String medication : patient.getCurrentMedications()) {
+            medicationsArea.append(medication + "\n");
+        }
+        formPanel.add(new JScrollPane(medicationsArea), gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        dialog.add(new JLabel("Age:"), gbc);
-        gbc.gridx = 1;
-        dialog.add(ageField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        dialog.add(new JLabel("Email:"), gbc);
-        gbc.gridx = 1;
-        dialog.add(emailField, gbc);
-
+        // Add buttons panel
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton saveButton = new JButton("Save");
+        JButton cancelButton = new JButton("Cancel");
+
         saveButton.addActionListener(e -> {
             try {
-                String name = nameField.getText();
-                int age = Integer.parseInt(ageField.getText());
-                String email = emailField.getText();
+                // Update patient information
+                patient.setName(nameField.getText());
+                patient.setAge(Integer.parseInt(ageField.getText()));
+                patient.setGender(genderField.getText());
+                patient.setBloodGroup(bloodGroupField.getText());
+                patient.setPhone(phoneField.getText());
+                patient.setEmail(emailField.getText());
+                patient.setAddress(addressField.getText());
+                patient.setEmergencyContact(emergencyContactField.getText());
+                patient.setAllergies(allergiesField.getText());
+                patient.setDiagnosis(diagnosisField.getText());
 
-                patient.setName(name);
-                patient.setAge(age);
-                patient.setEmail(email);
+                // Update medications
+                List<String> medications = Arrays.asList(medicationsArea.getText().split("\n"));
+                patient.setCurrentMedications(medications);
 
-                DataStore.getInstance().addUser(patient);
+                // Save to data store
+                dataStore.updatePatient(patient);
                 dialog.dispose();
                 refreshPatientsPanel();
+                showSuccess("Patient information updated successfully");
             } catch (NumberFormatException ex) {
-                showError("Please enter valid age");
+                showError("Please enter a valid age");
             }
         });
 
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        dialog.add(saveButton, gbc);
+        cancelButton.addActionListener(e -> dialog.dispose());
 
-        dialog.pack();
+        buttonsPanel.add(saveButton);
+        buttonsPanel.add(cancelButton);
+
+        // Add panels to dialog
+        dialog.add(new JScrollPane(formPanel), BorderLayout.CENTER);
+        dialog.add(buttonsPanel, BorderLayout.SOUTH);
+
+        dialog.setSize(500, 700);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }

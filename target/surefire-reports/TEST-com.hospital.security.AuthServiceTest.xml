@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.hospital.security.AuthServiceTest" time="0.666" tests="4" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.hospital.security.AuthServiceTest" time="0.536" tests="4" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="23"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -13,7 +13,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="/opt/homebrew/Cellar/openjdk/23.0.1/libexec/openjdk.jdk/Contents/Home/lib"/>
-    <property name="sun.java.command" value="/Users/rikenshah/Desktop/Projects/Hospital Management System/target/surefire/surefirebooter15742769678567603646.jar /Users/rikenshah/Desktop/Projects/Hospital Management System/target/surefire 2024-12-04T21-08-26_943-jvmRun1 surefire7386044215151523809tmp surefire_012652346721175167917tmp"/>
+    <property name="sun.java.command" value="/Users/rikenshah/Desktop/Projects/Hospital Management System/target/surefire/surefirebooter3090939185776685830.jar /Users/rikenshah/Desktop/Projects/Hospital Management System/target/surefire 2024-12-04T21-14-21_935-jvmRun1 surefire13806504899846682583tmp surefire_018017619830473817125tmp"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/Users/rikenshah/Desktop/Projects/Hospital Management System/target/test-classes:/Users/rikenshah/Desktop/Projects/Hospital Management System/target/classes:/Users/rikenshah/.m2/repository/io/jsonwebtoken/jjwt-api/0.11.5/jjwt-api-0.11.5.jar:/Users/rikenshah/.m2/repository/io/jsonwebtoken/jjwt-impl/0.11.5/jjwt-impl-0.11.5.jar:/Users/rikenshah/.m2/repository/io/jsonwebtoken/jjwt-jackson/0.11.5/jjwt-jackson-0.11.5.jar:/Users/rikenshah/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.12.6.1/jackson-databind-2.12.6.1.jar:/Users/rikenshah/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.12.6/jackson-annotations-2.12.6.jar:/Users/rikenshah/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.12.6/jackson-core-2.12.6.jar:/Users/rikenshah/.m2/repository/ch/qos/logback/logback-classic/1.4.11/logback-classic-1.4.11.jar:/Users/rikenshah/.m2/repository/ch/qos/logback/logback-core/1.4.11/logback-core-1.4.11.jar:/Users/rikenshah/.m2/repository/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar:/Users/rikenshah/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.8.2/junit-jupiter-api-5.8.2.jar:/Users/rikenshah/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/Users/rikenshah/.m2/repository/org/junit/platform/junit-platform-commons/1.8.2/junit-platform-commons-1.8.2.jar:/Users/rikenshah/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/rikenshah/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.8.2/junit-jupiter-engine-5.8.2.jar:/Users/rikenshah/.m2/repository/org/junit/platform/junit-platform-engine/1.8.2/junit-platform-engine-1.8.2.jar:/Users/rikenshah/.m2/repository/org/mockito/mockito-core/4.5.1/mockito-core-4.5.1.jar:/Users/rikenshah/.m2/repository/net/bytebuddy/byte-buddy/1.12.9/byte-buddy-1.12.9.jar:/Users/rikenshah/.m2/repository/net/bytebuddy/byte-buddy-agent/1.12.9/byte-buddy-agent-1.12.9.jar:/Users/rikenshah/.m2/repository/org/objenesis/objenesis/3.2/objenesis-3.2.jar:/Users/rikenshah/.m2/repository/org/mockito/mockito-junit-jupiter/4.5.1/mockito-junit-jupiter-4.5.1.jar:/Users/rikenshah/.m2/repository/org/json/json/20231013/json-20231013.jar:"/>
@@ -30,7 +30,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="apple.awt.application.name" value="ForkedBooter"/>
-    <property name="surefire.real.class.path" value="/Users/rikenshah/Desktop/Projects/Hospital Management System/target/surefire/surefirebooter15742769678567603646.jar"/>
+    <property name="surefire.real.class.path" value="/Users/rikenshah/Desktop/Projects/Hospital Management System/target/surefire/surefirebooter3090939185776685830.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.runtime.version" value="23.0.1"/>
@@ -59,20 +59,20 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="67.0"/>
   </properties>
-  <testcase name="testLoginWithValidCredentials" classname="com.hospital.security.AuthServiceTest" time="0.643">
-    <system-out><![CDATA[21:08:29.124 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+  <testcase name="testLoginWithValidCredentials" classname="com.hospital.security.AuthServiceTest" time="0.513">
+    <system-out><![CDATA[21:14:23.435 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
 ]]></system-out>
   </testcase>
-  <testcase name="testLoginWithInvalidPassword" classname="com.hospital.security.AuthServiceTest" time="0.001">
-    <system-out><![CDATA[21:08:29.134 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+  <testcase name="testLoginWithInvalidPassword" classname="com.hospital.security.AuthServiceTest" time="0.002">
+    <system-out><![CDATA[21:14:23.443 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
 ]]></system-out>
   </testcase>
   <testcase name="testLogout" classname="com.hospital.security.AuthServiceTest" time="0.001">
-    <system-out><![CDATA[21:08:29.136 [main] INFO  com.hospital.security.AuthService - User logged out
+    <system-out><![CDATA[21:14:23.446 [main] INFO  com.hospital.security.AuthService - User logged out
 ]]></system-out>
   </testcase>
-  <testcase name="testLoginWithInvalidUsername" classname="com.hospital.security.AuthServiceTest" time="0.004">
-    <system-out><![CDATA[21:08:29.138 [main] INFO  com.hospital.security.AuthService - Attempting login for user: nonexistent
+  <testcase name="testLoginWithInvalidUsername" classname="com.hospital.security.AuthServiceTest" time="0.002">
+    <system-out><![CDATA[21:14:23.448 [main] INFO  com.hospital.security.AuthService - Attempting login for user: nonexistent
 ]]></system-out>
   </testcase>
 </testsuite>

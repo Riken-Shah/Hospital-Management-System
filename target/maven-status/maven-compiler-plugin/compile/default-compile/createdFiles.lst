@@ -7,6 +7,7 @@ com/hospital/model/Dietician.class
 com/hospital/models/PharmacyInventory.class
 com/hospital/models/Pharmacist.class
 com/hospital/models/LabTest.class
+com/hospital/views/DoctorDashboard$3.class
 com/hospital/models/Patient.class
 com/hospital/Main.class
 com/hospital/model/BaseEntity.class
@@ -51,6 +52,7 @@ com/hospital/views/BaseDashboard.class
 com/hospital/models/Hospital.class
 com/hospital/views/CommunityManagerDashboard.class
 com/hospital/views/DoctorDashboard.class
+com/hospital/views/DoctorDashboard$2.class
 com/hospital/models/ITSupportTicket.class
 com/hospital/views/PharmacistDashboard.class
 com/hospital/security/JwtService.class

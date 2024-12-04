@@ -6263,3 +6263,21 @@ java.lang.IllegalStateException: Dietician not found for user: 1
 2024-12-04 21:08:43.640 [main] INFO  com.hospital.data.DataManager - Adding hospital: City General Hospital
 2024-12-04 21:08:48.817 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
 2024-12-04 21:09:38.065 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: patient1
+2024-12-04 21:13:56.227 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 21:13:56.240 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 21:13:56.243 [main] INFO  com.hospital.security.AuthService - User logged out
+2024-12-04 21:13:56.245 [main] INFO  com.hospital.security.AuthService - Attempting login for user: nonexistent
+2024-12-04 21:14:23.435 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 21:14:23.443 [main] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 21:14:23.446 [main] INFO  com.hospital.security.AuthService - User logged out
+2024-12-04 21:14:23.448 [main] INFO  com.hospital.security.AuthService - Attempting login for user: nonexistent
+2024-12-04 21:14:33.621 [main] INFO  com.hospital.data.DataManager - Adding doctor: Dr. John Smith
+2024-12-04 21:14:33.622 [main] INFO  com.hospital.data.DataManager - Adding patient: Jane Doe with ID: 2 to patients map
+2024-12-04 21:14:33.622 [main] INFO  com.hospital.data.DataManager - Adding patient: Jane Doe with ID: 2 to users map
+2024-12-04 21:14:33.622 [main] INFO  com.hospital.data.DataManager - Successfully added patient to both maps
+2024-12-04 21:14:33.623 [main] INFO  com.hospital.data.DataManager - Adding pharmacist: Bob Wilson
+2024-12-04 21:14:33.623 [main] INFO  com.hospital.data.DataManager - Adding IT support: Mike Brown
+2024-12-04 21:14:33.623 [main] INFO  com.hospital.data.DataManager - Adding dietician: Sarah Johnson
+2024-12-04 21:14:33.623 [main] INFO  com.hospital.data.DataManager - Adding hospital: City General Hospital
+2024-12-04 21:14:41.367 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: doctor1
+2024-12-04 21:15:52.099 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: patient1
