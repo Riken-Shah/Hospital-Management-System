@@ -6681,3 +6681,12 @@ java.lang.ClassCastException: class com.hospital.models.User cannot be cast to c
 2024-12-04 23:19:21.755 [main] INFO  com.hospital.data.DataManager - Adding dietician: Sarah Johnson
 2024-12-04 23:19:21.755 [main] INFO  com.hospital.data.DataManager - Adding hospital: City General Hospital
 2024-12-04 23:19:29.193 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: admin
+2024-12-04 23:28:14.884 [main] INFO  com.hospital.data.DataManager - Adding doctor: Dr. John Smith
+2024-12-04 23:28:14.886 [main] INFO  com.hospital.data.DataManager - Adding patient: Jane Doe with ID: 2 to patients map
+2024-12-04 23:28:14.886 [main] INFO  com.hospital.data.DataManager - Adding patient: Jane Doe with ID: 2 to users map
+2024-12-04 23:28:14.886 [main] INFO  com.hospital.data.DataManager - Successfully added patient to both maps
+2024-12-04 23:28:14.886 [main] INFO  com.hospital.data.DataManager - Adding pharmacist: Bob Wilson
+2024-12-04 23:28:14.886 [main] INFO  com.hospital.data.DataManager - Adding IT support: Mike Brown
+2024-12-04 23:28:14.886 [main] INFO  com.hospital.data.DataManager - Adding dietician: Sarah Johnson
+2024-12-04 23:28:14.887 [main] INFO  com.hospital.data.DataManager - Adding hospital: City General Hospital
+2024-12-04 23:28:19.431 [AWT-EventQueue-0] INFO  com.hospital.security.AuthService - Attempting login for user: admin
