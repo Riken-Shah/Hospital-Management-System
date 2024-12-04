@@ -15,6 +15,7 @@ public class DataStore {
     private Map<Integer, MedicalRecord> medicalRecords;
     private Map<Integer, DietPlan> dietPlans;
     private Map<Integer, Prescription> prescriptions;
+    private Map<Integer, DietConsultation> dietConsultations;
 
     public static synchronized DataStore getInstance() {
         if (instance == null) {
@@ -30,6 +31,7 @@ public class DataStore {
         medicalRecords = new HashMap<>();
         dietPlans = new HashMap<>();
         prescriptions = new HashMap<>();
+        dietConsultations = new HashMap<>();
         addSampleData();
     }
 
@@ -81,6 +83,7 @@ public class DataStore {
         medicalRecords.clear();
         dietPlans.clear();
         prescriptions.clear();
+        dietConsultations.clear();
         nextId = 1;
     }
 
@@ -229,6 +232,10 @@ public class DataStore {
                 .collect(Collectors.toList());
     }
 
+    public List<Prescription> getAllPrescriptions() {
+        return new ArrayList<>(prescriptions.values());
+    }
+
     // Dietician-specific operations
     public List<User> getPatientsForDietician(int dieticianId) {
         // For now, return all patients with PATIENT role
@@ -239,7 +246,30 @@ public class DataStore {
     }
 
     public List<DietConsultation> getDietConsultationsForDietician(int dieticianId) {
-        // TODO: Implement this method when DietConsultation model is ready
-        return new ArrayList<>();
+        return dietConsultations.values().stream()
+                .filter(consultation -> consultation.getDieticianId() == dieticianId)
+                .collect(Collectors.toList());
+    }
+
+    public void addDietConsultation(DietConsultation consultation) {
+        dietConsultations.put(consultation.getId(), consultation);
+    }
+
+    public DietConsultation getDietConsultation(int id) {
+        return dietConsultations.get(id);
+    }
+
+    public void updateDietConsultation(DietConsultation consultation) {
+        dietConsultations.put(consultation.getId(), consultation);
+    }
+
+    public void deleteDietConsultation(int id) {
+        dietConsultations.remove(id);
+    }
+
+    public List<DietConsultation> getDietConsultationsForPatient(int patientId) {
+        return dietConsultations.values().stream()
+                .filter(consultation -> consultation.getPatientId() == patientId)
+                .collect(Collectors.toList());
     }
 } 

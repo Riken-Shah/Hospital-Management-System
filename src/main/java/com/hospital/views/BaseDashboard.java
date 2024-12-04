@@ -77,6 +77,10 @@ public abstract class BaseDashboard extends JFrame {
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    protected void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Information", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     protected void logout() {
         logger.info("User {} logged out", currentUser.getUsername());
         dispose();

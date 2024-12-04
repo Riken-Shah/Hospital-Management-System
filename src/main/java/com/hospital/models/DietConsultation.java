@@ -1,42 +1,38 @@
 package com.hospital.models;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class DietConsultation {
     private int id;
     private int patientId;
     private int dieticianId;
-    private LocalDateTime consultationDate;
+    private LocalDate consultationDate;
     private String notes;
-    private String recommendations;
+    private LocalDate nextAppointment;
     private String status;
-    private LocalDateTime nextAppointment;
 
-    public DietConsultation(int id, int patientId, int dieticianId, LocalDateTime consultationDate,
-                           String notes, String recommendations, String status, LocalDateTime nextAppointment) {
+    public DietConsultation(int id, int patientId, int dieticianId, LocalDate consultationDate, 
+                          String notes, LocalDate nextAppointment) {
         this.id = id;
         this.patientId = patientId;
         this.dieticianId = dieticianId;
         this.consultationDate = consultationDate;
         this.notes = notes;
-        this.recommendations = recommendations;
-        this.status = status;
         this.nextAppointment = nextAppointment;
+        this.status = "SCHEDULED";
     }
 
     // Getters
     public int getId() { return id; }
     public int getPatientId() { return patientId; }
     public int getDieticianId() { return dieticianId; }
-    public LocalDateTime getConsultationDate() { return consultationDate; }
+    public LocalDate getConsultationDate() { return consultationDate; }
     public String getNotes() { return notes; }
-    public String getRecommendations() { return recommendations; }
+    public LocalDate getNextAppointment() { return nextAppointment; }
     public String getStatus() { return status; }
-    public LocalDateTime getNextAppointment() { return nextAppointment; }
 
     // Setters
-    public void setNotes(String notes) { this.notes = notes; }
-    public void setRecommendations(String recommendations) { this.recommendations = recommendations; }
     public void setStatus(String status) { this.status = status; }
-    public void setNextAppointment(LocalDateTime nextAppointment) { this.nextAppointment = nextAppointment; }
+    public void setNotes(String notes) { this.notes = notes; }
+    public void setNextAppointment(LocalDate nextAppointment) { this.nextAppointment = nextAppointment; }
 } 
