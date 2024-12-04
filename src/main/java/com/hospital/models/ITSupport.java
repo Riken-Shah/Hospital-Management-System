@@ -1,36 +1,16 @@
 package com.hospital.models;
 
-public class ITSupport {
-    private int id;
-    private int userId;
-    private int hospitalId;
-    private String name;
+public class ITSupport extends User {
     private String specialization;
     private String contactNumber;
     private boolean available;
 
-    public ITSupport(int id, int userId, int hospitalId, String name, String specialization, String contactNumber) {
-        this.id = id;
-        this.userId = userId;
-        this.hospitalId = hospitalId;
-        this.name = name;
+    public ITSupport(int id, String name, String username, int hospitalId, String specialization, String contactNumber) {
+        super(id, name, username, "IT_SUPPORT", hospitalId);
         this.specialization = specialization;
         this.contactNumber = contactNumber;
         this.available = true;
     }
-
-    // Getters and setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
-
-    public int getHospitalId() { return hospitalId; }
-    public void setHospitalId(int hospitalId) { this.hospitalId = hospitalId; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
 
     public String getSpecialization() { return specialization; }
     public void setSpecialization(String specialization) { this.specialization = specialization; }
@@ -43,6 +23,6 @@ public class ITSupport {
 
     @Override
     public String toString() {
-        return name;
+        return getName();
     }
 } 

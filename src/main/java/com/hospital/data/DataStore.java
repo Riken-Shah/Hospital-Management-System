@@ -19,6 +19,7 @@ public class DataStore {
     private Map<Integer, Medicine> medicines;
     private Map<Integer, MedicineOrder> medicineOrders;
     private Map<Integer, Supplier> suppliers;
+    private Map<Integer, ITSupportTicket> tickets;
 
     public static synchronized DataStore getInstance() {
         if (instance == null) {
@@ -38,7 +39,49 @@ public class DataStore {
         medicines = new HashMap<>();
         medicineOrders = new HashMap<>();
         suppliers = new HashMap<>();
-        addSampleData();
+        tickets = new HashMap<>();
+        initializeDummyData();
+    }
+
+    private void initializeDummyData() {
+        // Add dummy IT Support user
+        ITSupport itSupport = new ITSupport(
+            1, 
+            "Alex Tech", 
+            "alextech", 
+            1, 
+            "System Administration",
+            "123-456-7890"
+        );
+        users.put(itSupport.getId(), itSupport);
+
+        // Add some dummy tickets
+        addTicket(new ITSupportTicket(1, 2, "Hardware", "Laptop not turning on", "HIGH"));
+        addTicket(new ITSupportTicket(2, 3, "Software", "Email client not working", "MEDIUM"));
+        addTicket(new ITSupportTicket(3, 4, "Network", "Unable to connect to printer", "LOW"));
+    }
+
+    public void addTicket(ITSupportTicket ticket) {
+        if (ticket.getId() == 0) {
+            ticket.setId(getNextId());
+        }
+        tickets.put(ticket.getId(), ticket);
+    }
+
+    public ITSupportTicket getTicket(int id) {
+        return tickets.get(id);
+    }
+
+    public List<ITSupportTicket> getAllTickets() {
+        return new ArrayList<>(tickets.values());
+    }
+
+    public void updateTicket(ITSupportTicket ticket) {
+        tickets.put(ticket.getId(), ticket);
+    }
+
+    public void deleteTicket(int id) {
+        tickets.remove(id);
     }
 
     private void addSampleData() {
@@ -118,6 +161,7 @@ public class DataStore {
         medicines.clear();
         medicineOrders.clear();
         suppliers.clear();
+        tickets.clear();
         nextId = 1;
     }
 

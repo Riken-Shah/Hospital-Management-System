@@ -65,6 +65,7 @@ com/hospital/views/CommunityManagerDashboard.class
 com/hospital/views/PharmacistDashboard$1.class
 com/hospital/views/DoctorDashboard$5.class
 com/hospital/views/DoctorDashboard.class
+com/hospital/views/ITSupportDashboard$1.class
 com/hospital/models/Medicine.class
 com/hospital/views/DoctorDashboard$2.class
 com/hospital/models/ITSupportTicket.class
