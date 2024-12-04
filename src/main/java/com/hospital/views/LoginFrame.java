@@ -116,6 +116,9 @@ public class LoginFrame extends JFrame {
                     case "DIETICIAN":
                         dashboard = new DieticianDashboard(user);
                         break;
+                    case "COMMUNITY_MANAGER":
+                        dashboard = new CommunityManagerDashboard(user, authService);
+                        break;
                     default:
                         showError("Invalid user role: " + user.getRole());
                         return;

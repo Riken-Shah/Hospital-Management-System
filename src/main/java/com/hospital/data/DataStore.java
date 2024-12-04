@@ -4,11 +4,11 @@ import com.hospital.models.*;
 import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class DataStore {
     private static DataStore instance;
-    private static int nextId = 1;
-
+    private int nextId = 1;
     private Map<Integer, User> users;
     private Map<Integer, Patient> patients;
     private Map<Integer, Appointment> appointments;
@@ -20,6 +20,9 @@ public class DataStore {
     private Map<Integer, MedicineOrder> medicineOrders;
     private Map<Integer, Supplier> suppliers;
     private Map<Integer, ITSupportTicket> tickets;
+    private List<CommunityManager> communityManagers;
+    private List<CommunityHealthMetric> healthMetrics;
+    private List<VaccinationDrive> vaccinationDrives;
 
     public static synchronized DataStore getInstance() {
         if (instance == null) {
@@ -40,13 +43,16 @@ public class DataStore {
         medicineOrders = new HashMap<>();
         suppliers = new HashMap<>();
         tickets = new HashMap<>();
+        communityManagers = new ArrayList<>();
+        healthMetrics = new ArrayList<>();
+        vaccinationDrives = new ArrayList<>();
         initializeDummyData();
     }
 
     private void initializeDummyData() {
         // Add dummy IT Support user
         ITSupport itSupport = new ITSupport(
-            1, 
+            getNextId(), 
             "Alex Tech", 
             "alextech", 
             1, 
@@ -56,76 +62,31 @@ public class DataStore {
         users.put(itSupport.getId(), itSupport);
 
         // Add some dummy tickets
-        addTicket(new ITSupportTicket(1, 2, "Hardware", "Laptop not turning on", "HIGH"));
-        addTicket(new ITSupportTicket(2, 3, "Software", "Email client not working", "MEDIUM"));
-        addTicket(new ITSupportTicket(3, 4, "Network", "Unable to connect to printer", "LOW"));
-    }
+        addTicket(new ITSupportTicket(getNextId(), 2, "Hardware", "Laptop not turning on", "HIGH"));
+        addTicket(new ITSupportTicket(getNextId(), 3, "Software", "Email client not working", "MEDIUM"));
+        addTicket(new ITSupportTicket(getNextId(), 4, "Network", "Unable to connect to printer", "LOW"));
 
-    public void addTicket(ITSupportTicket ticket) {
-        if (ticket.getId() == 0) {
-            ticket.setId(getNextId());
-        }
-        tickets.put(ticket.getId(), ticket);
-    }
+        // Add dummy community manager
+        CommunityManager communityManager = new CommunityManager(getNextId(), "John Community", "community1", 1, "North Region", "555-0123", 50000);
+        users.put(communityManager.getId(), communityManager);
+        communityManagers.add(communityManager);
+        
+        // Add dummy health metrics
+        healthMetrics.addAll(Arrays.asList(
+            new CommunityHealthMetric(1, "North Region", "Diabetes Rate", 8.5, "%", LocalDate.now(), "Monthly tracking"),
+            new CommunityHealthMetric(2, "North Region", "Vaccination Rate", 75.0, "%", LocalDate.now(), "COVID-19 vaccination"),
+            new CommunityHealthMetric(3, "North Region", "Blood Pressure Cases", 120, "cases", LocalDate.now(), "Hypertension tracking")
+        ));
 
-    public ITSupportTicket getTicket(int id) {
-        return tickets.get(id);
-    }
+        // Add dummy vaccination drives
+        vaccinationDrives.addAll(Arrays.asList(
+            new VaccinationDrive(1, "North Region", "COVID-19 Booster", LocalDate.now(), LocalDate.now().plusMonths(1), 
+                10000, 2500, "In Progress", "Targeting elderly population"),
+            new VaccinationDrive(2, "North Region", "Flu Vaccine", LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), 
+                5000, 3000, "In Progress", "Annual flu vaccination drive")
+        ));
 
-    public List<ITSupportTicket> getAllTickets() {
-        return new ArrayList<>(tickets.values());
-    }
-
-    public void updateTicket(ITSupportTicket ticket) {
-        tickets.put(ticket.getId(), ticket);
-    }
-
-    public void deleteTicket(int id) {
-        tickets.remove(id);
-    }
-
-    private void addSampleData() {
-        // Add sample users
-        addUser(new User(getNextId(), "John Doe", "johndoe", "DOCTOR", 1));
-        addUser(new User(getNextId(), "Jane Smith", "janesmith", "PATIENT", 1));
-        addUser(new User(getNextId(), "Alice Brown", "alicebrown", "DIETICIAN", 1));
-        addUser(new User(getNextId(), "Bob Wilson", "bobwilson", "PHARMACIST", 1));
-
-        // Add sample patients
-        Patient patient = new Patient(2, "Jane Smith", 35, "None", LocalDate.now(),
-                "123-456-7890", "jane@example.com", "123 Main St", "A+", "None",
-                LocalDate.of(1988, 1, 1), "Female", "987-654-3210");
-        addPatient(patient);
-
-        // Add sample appointments
-        Appointment appointment = new Appointment(getNextId(), 2, 1, LocalDateTime.now().plusDays(1),
-                "Regular Checkup", "SCHEDULED", "First visit", "Annual physical", 30, "Room 101");
-        addAppointment(appointment);
-
-        // Add sample prescriptions
-        Prescription prescription1 = new Prescription(getNextId(), 2, 1, "Hypertension",
-                "Take medications as directed", "Monitor blood pressure daily");
-        prescription1.addMedication(new Prescription.Medication("Lisinopril", "10mg", 30, "Take once daily with water"));
-        prescription1.addMedication(new Prescription.Medication("Aspirin", "81mg", 30, "Take once daily with food"));
-        addPrescription(prescription1);
-
-        Prescription prescription2 = new Prescription(getNextId(), 2, 1, "Seasonal Allergies",
-                "Take as needed", "Avoid known allergens");
-        prescription2.addMedication(new Prescription.Medication("Cetirizine", "10mg", 90, "Take once daily"));
-        prescription2.addMedication(new Prescription.Medication("Nasal Spray", "2 sprays per nostril", 30, "Use twice daily"));
-        addPrescription(prescription2);
-
-        // Add sample medical records
-        addMedicalRecord(new MedicalRecord(getNextId(), 2, 1, "Check-up", "Regular annual check-up"));
-
-        // Add sample diet plans
-        List<String> restrictions = Arrays.asList("Dairy", "Gluten");
-        List<String> recommendations = Arrays.asList("Eat more vegetables", "Exercise daily");
-        DietPlan plan = new DietPlan(getNextId(), 2, 3, LocalDate.now(), LocalDate.now().plusMonths(1),
-                "Weight loss", restrictions, recommendations, "Initial plan", "ACTIVE");
-        addDietPlan(plan);
-
-        // Add sample medicines
+        // Add sample medicines and suppliers
         Medicine med1 = new Medicine(getNextId(), "Paracetamol", 100, 5.99, LocalDate.now().plusYears(2), "Tablets", "Pain Relief");
         Medicine med2 = new Medicine(getNextId(), "Amoxicillin", 50, 15.99, LocalDate.now().plusYears(1), "Capsules", "Antibiotics");
         Medicine med3 = new Medicine(getNextId(), "Ibuprofen", 75, 7.99, LocalDate.now().plusYears(2), "Tablets", "Pain Relief");
@@ -133,7 +94,6 @@ public class DataStore {
         addMedicine(med2);
         addMedicine(med3);
 
-        // Add sample suppliers
         Supplier sup1 = new Supplier(getNextId(), "PharmaCorp", "123-456-7890", "supplier@pharmacorp.com", "A");
         Supplier sup2 = new Supplier(getNextId(), "MediSupply", "098-765-4321", "contact@medisupply.com", "A");
         addSupplier(sup1);
@@ -148,6 +108,40 @@ public class DataStore {
         MedicineOrder order2 = new MedicineOrder(getNextId(), sup2.getId(), LocalDate.now().minusDays(2), "PENDING");
         order2.addItem(med3.getId(), 30);
         addMedicineOrder(order2);
+
+        // Add sample users and patients
+        addUser(new User(getNextId(), "John Doe", "johndoe", "DOCTOR", 1));
+        addUser(new User(getNextId(), "Jane Smith", "janesmith", "PATIENT", 1));
+
+        Patient patient = new Patient(2, "Jane Smith", 35, "None", LocalDate.now(),
+                "123-456-7890", "jane@example.com", "123 Main St", "A+", "None",
+                LocalDate.of(1988, 1, 1), "Female", "987-654-3210");
+        addPatient(patient);
+
+        // Add sample appointments
+        Appointment appointment = new Appointment(getNextId(), 2, 1, LocalDateTime.now().plusDays(1),
+                "Regular Checkup", "SCHEDULED", "First visit", "Annual physical", 30, "Room 101");
+        addAppointment(appointment);
+
+        // Add sample prescriptions
+        Prescription prescription = new Prescription(getNextId(), 2, 1, "Hypertension",
+                "Take medications as directed", "Monitor blood pressure daily");
+        prescription.addMedication(new Prescription.Medication("Lisinopril", "10mg", 30, "Take once daily with water"));
+        addPrescription(prescription);
+
+        // Add sample medical records
+        addMedicalRecord(new MedicalRecord(getNextId(), 2, 1, "Check-up", "Regular annual check-up"));
+
+        // Add sample diet plans
+        List<String> restrictions = Arrays.asList("Dairy", "Gluten");
+        List<String> recommendations = Arrays.asList("Eat more vegetables", "Exercise daily");
+        DietPlan plan = new DietPlan(getNextId(), 2, 3, LocalDate.now(), LocalDate.now().plusMonths(1),
+                "Weight loss", restrictions, recommendations, "Initial plan", "ACTIVE");
+        addDietPlan(plan);
+    }
+
+    public int getNextId() {
+        return nextId++;
     }
 
     public void clear() {
@@ -162,20 +156,23 @@ public class DataStore {
         medicineOrders.clear();
         suppliers.clear();
         tickets.clear();
+        communityManagers.clear();
+        healthMetrics.clear();
+        vaccinationDrives.clear();
         nextId = 1;
     }
 
-    public static synchronized int getNextId() {
-        return nextId++;
-    }
-
-    // User operations
+    // User methods
     public void addUser(User user) {
         users.put(user.getId(), user);
     }
 
     public User getUser(int id) {
         return users.get(id);
+    }
+
+    public List<User> getAllUsers() {
+        return new ArrayList<>(users.values());
     }
 
     public User getUserByUsername(String username) {
@@ -195,7 +192,7 @@ public class DataStore {
                 .collect(Collectors.toList());
     }
 
-    // Patient operations
+    // Patient methods
     public void addPatient(Patient patient) {
         patients.put(patient.getId(), patient);
     }
@@ -212,7 +209,7 @@ public class DataStore {
         return new ArrayList<>(patients.values());
     }
 
-    // Appointment operations
+    // Appointment methods
     public void addAppointment(Appointment appointment) {
         appointments.put(appointment.getId(), appointment);
     }
@@ -237,7 +234,7 @@ public class DataStore {
                 .collect(Collectors.toList());
     }
 
-    // Medical record operations
+    // Medical record methods
     public void addMedicalRecord(MedicalRecord record) {
         medicalRecords.put(record.getId(), record);
     }
@@ -258,7 +255,7 @@ public class DataStore {
                 .collect(Collectors.toList());
     }
 
-    // Diet plan operations
+    // Diet plan methods
     public void addDietPlan(DietPlan plan) {
         dietPlans.put(plan.getId(), plan);
     }
@@ -281,7 +278,7 @@ public class DataStore {
                 .collect(Collectors.toList());
     }
 
-    // Prescription operations
+    // Prescription methods
     public void addPrescription(Prescription prescription) {
         prescriptions.put(prescription.getId(), prescription);
     }
@@ -314,15 +311,7 @@ public class DataStore {
         return new ArrayList<>(prescriptions.values());
     }
 
-    // Dietician-specific operations
-    public List<User> getPatientsForDietician(int dieticianId) {
-        // For now, return all patients with PATIENT role
-        // TODO: Implement proper patient-dietician relationship
-        return users.values().stream()
-                .filter(u -> "PATIENT".equals(u.getRole()))
-                .collect(Collectors.toList());
-    }
-
+    // Diet consultation methods
     public List<DietConsultation> getDietConsultationsForDietician(int dieticianId) {
         return dietConsultations.values().stream()
                 .filter(consultation -> consultation.getDieticianId() == dieticianId)
@@ -351,7 +340,7 @@ public class DataStore {
                 .collect(Collectors.toList());
     }
 
-    // Medicine operations
+    // Medicine methods
     public void addMedicine(Medicine medicine) {
         medicines.put(medicine.getId(), medicine);
     }
@@ -372,7 +361,7 @@ public class DataStore {
         medicines.remove(id);
     }
 
-    // Supplier operations
+    // Supplier methods
     public void addSupplier(Supplier supplier) {
         suppliers.put(supplier.getId(), supplier);
     }
@@ -393,7 +382,7 @@ public class DataStore {
         suppliers.remove(id);
     }
 
-    // Order operations
+    // Medicine Order methods
     public void addMedicineOrder(MedicineOrder order) {
         medicineOrders.put(order.getId(), order);
     }
@@ -412,5 +401,78 @@ public class DataStore {
 
     public void deleteMedicineOrder(int id) {
         medicineOrders.remove(id);
+    }
+
+    // IT Support Ticket methods
+    public void addTicket(ITSupportTicket ticket) {
+        tickets.put(ticket.getId(), ticket);
+    }
+
+    public ITSupportTicket getTicket(int id) {
+        return tickets.get(id);
+    }
+
+    public List<ITSupportTicket> getAllTickets() {
+        return new ArrayList<>(tickets.values());
+    }
+
+    public void updateTicket(ITSupportTicket ticket) {
+        tickets.put(ticket.getId(), ticket);
+    }
+
+    public void deleteTicket(int id) {
+        tickets.remove(id);
+    }
+
+    // Community Manager methods
+    public List<CommunityManager> getCommunityManagers() {
+        return new ArrayList<>(communityManagers);
+    }
+
+    public CommunityManager getCommunityManager(String username) {
+        return communityManagers.stream()
+                .filter(cm -> cm.getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<CommunityHealthMetric> getHealthMetrics(String region) {
+        return healthMetrics.stream()
+                .filter(metric -> metric.getRegion().equals(region))
+                .collect(Collectors.toList());
+    }
+
+    public List<VaccinationDrive> getVaccinationDrives(String region) {
+        return vaccinationDrives.stream()
+                .filter(drive -> drive.getRegion().equals(region))
+                .collect(Collectors.toList());
+    }
+
+    public void addHealthMetric(CommunityHealthMetric metric) {
+        metric.setId(healthMetrics.size() + 1);
+        healthMetrics.add(metric);
+    }
+
+    public void addVaccinationDrive(VaccinationDrive drive) {
+        drive.setId(vaccinationDrives.size() + 1);
+        vaccinationDrives.add(drive);
+    }
+
+    public void updateVaccinationDrive(VaccinationDrive drive) {
+        int index = IntStream.range(0, vaccinationDrives.size())
+                .filter(i -> vaccinationDrives.get(i).getId() == drive.getId())
+                .findFirst()
+                .orElse(-1);
+        if (index != -1) {
+            vaccinationDrives.set(index, drive);
+        }
+    }
+
+    // Dietician-specific methods
+    public List<User> getPatientsForDietician(int dieticianId) {
+        // For now, return all patients
+        return users.values().stream()
+                .filter(u -> "PATIENT".equals(u.getRole()))
+                .collect(Collectors.toList());
     }
 } 
